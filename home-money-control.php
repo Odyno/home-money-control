@@ -1,5 +1,24 @@
 <?php
 /**
+ * Copyright 2012  Alessandro Staniscia  (email : alessandro@staniscia.net)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License, version 2, as
+ * published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+ *
+ *
+ *
+ *
  * The plugin bootstrap file.
  *
  * This file is read by WordPress to generate the plugin information in the plugin
@@ -32,75 +51,45 @@ if (!defined('WPINC')) {
 	die;
 }
 
+
 /**
  * The core plugin definition and class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
-
-
 define( '__HMC_FILE__', __FILE__ );
+define( '__HMC_VERSION__', "1.0.0" );
 define( '__HMC_PATH__', plugin_dir_path( __HMC_FILE__ ) );
 define( '__HMC_URL__', plugin_dir_url( __HMC_FILE__ ) );
 define( '__PNAMESPANE__', 'home_money_control' );
 
 
+/**
+ * Dependecy with restapi plugin.
+ */
+require_once(plugin_dir_path( __HMC_FILE__ ) . '../rest-api/plugin.php');
+
+
+
 // Load plugin class files.
 require_once( 'includes/class-home-money-control.php' );
-require_once( 'includes/class-home-money-control-settings.php' );
-
-
-
-
-
-
-
-
-
-// Load plugin libraries.
-require_once( 'includes/lib/class-home-money-control-admin-api.php' );
-require_once( 'includes/lib/class-home-money-control-post-type.php' );
-require_once( 'includes/lib/class-home-money-control-taxonomy.php' );
 
 // Load plugin Utils.
 require_once( 'includes/utils/class-hmc-time.php' );
 require_once( 'includes/utils/class-hmc-utils.php' );
 
-// Load Category Manager.
-require_once( 'includes/category/class-hmc-voice-type.php' );
-require_once( 'includes/category/class-hmc-voice.php' );
-require_once( 'includes/category/class-hmc-category.php' );
-require_once( 'includes/transactions/class-hmc-field.php' );
-require_once( 'includes/transactions/class-hmc-transactions.php' );
-
-
-// LOAD API.
 /**
- * Init of function.
- */
-function hmc_api_init() {
-	require_once dirname( __FILE__ ) . '/includes/api/class-hmc-api-category.php';
-	require_once dirname( __FILE__ ) . '/includes/api/class-hmc-api-transaction.php';
-	add_filter( 'json_endpoints', array( new HMC_API_Category(), 'register_routes' ) );
-	add_filter( 'json_endpoints', array( new Hmc_API_Transaction(), 'register_routes' ) );
-}
-
-add_action( 'wp_json_server_before_serve', 'hmc_api_init' );
-
-
-/**
- * Returns the main instance of _home_money_control to prevent the need to use globals.
+ * Begins execution of the plugin.
  *
- * @since  1.0.0
- * @return object _home_money_control
+ * Since everything within the plugin is registered via hooks,
+ * then kicking off the plugin from this point in the file does
+ * not affect the page life cycle.
+ *
+ * @since    1.0.0
  */
-function _home_money_control() {
-	$instance = Home_Money_Control::instance( __FILE__, '1.0.0' );
+function run_home_money_control() {
+	$plugin = new Home_Money_Control( __FILE__, __HMC_VERSION__ );
+	$plugin->run();
 
-	if ( is_null( $instance->settings ) ) {
-		$instance->settings = Home_Money_Control_Settings::instance( $instance );
-	}
-
-	return $instance;
 }
 
-_home_money_control();
+run_home_money_control();

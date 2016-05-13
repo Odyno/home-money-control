@@ -1,310 +1,241 @@
 <?php
+/**
+ * Copyright 2012  Alessandro Staniscia  (email : alessandro@staniscia.net)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License, version 2, as
+ * published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+ *
+ * This class define the main class of plugin
+ *
+ * @package WordPress
+ */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+// If this file is called directly, abort.
+if ( ! defined( 'WPINC' ) ) {
+	die;
 }
 
+/**
+ * Class Home_Money_Control
+ */
 class Home_Money_Control {
 
 	/**
-	 * The single instance of Home_Money_Control.
-	 * @var    object
-	 * @access  private
-	 * @since    1.0.0
-	 */
-	private static $_instance = null;
-
-	/**
-	 * Settings class object
-	 * @var     object
-	 * @access  public
-	 * @since   1.0.0
-	 */
-	public $settings = null;
-
-	/**
 	 * The version number.
-	 * @var     string
-	 * @access  public
-	 * @since   1.0.0
+	 *
+	 * @var _version string Version of plugin
 	 */
-	public $_version;
-
+	private $_version;
 
 	/**
 	 * The main plugin file.
-	 * @var     string
+	 *
+	 * @var     file string
 	 * @access  public
 	 * @since   1.0.0
 	 */
-	public $file;
+	private $file;
 
 	/**
 	 * The main plugin directory.
+	 *
 	 * @var     string
 	 * @access  public
 	 * @since   1.0.0
 	 */
-	public $dir;
+	private $dir;
+
+	/**
+	 * The dir path.
+	 *
+	 * @var string
+	 */
+	private $dir_path;
 
 	/**
 	 * The plugin assets directory.
+	 *
 	 * @var     string
 	 * @access  public
 	 * @since   1.0.0
 	 */
-	public $assets_dir;
+	private $assets_dir;
 
 	/**
 	 * The plugin assets URL.
+	 *
 	 * @var     string
 	 * @access  public
 	 * @since   1.0.0
 	 */
-	public $assets_url;
+	private $assets_url;
 
 	/**
 	 * Suffix for Javascripts.
-	 * @var     string
-	 * @access  public
-	 * @since   1.0.0
+	 *
 	 */
-	public $script_suffix;
+	private $script_suffix;
+
 
 	/**
-	 * Constructor function.
-	 * @access  public
-	 * @since   1.0.0
-	 * @return  void
+	 * Pluto.
+	 *
+	 * @var $database_handler  AA.
 	 */
-	public function __construct( $file = '', $version = '1.0.0' ) {
+	private $database_handler;
+
+	/**
+	 * Pippo.
+	 *
+	 * @var $api_handler AA.
+	 */
+	private $api_handler;
+
+	/**
+	 * Home_Money_Control constructor.
+	 *
+	 * @param string $file The filename position.
+	 * @param string $version The current version of plugin.
+	 */
+	public function __construct( $file, $version ) {
+
 		$this->_version    = $version;
-		$this->plugin_slug = "HMC";
+		$this->plugin_slug = 'HMC';
 
-		// Load plugin environment variables
-		$this->file       = $file;
-		$this->dir        = dirname( $this->file );
-		$this->assets_dir = trailingslashit( $this->dir ) . 'assets';
-		$this->assets_url = esc_url( trailingslashit( plugins_url( '/assets/', $this->file ) ) );
-
+		// Load plugin environment variables.
+		$this->file          = $file;
+		$this->dir           = dirname( $this->file );
+		$this->dir_path      = plugin_dir_path( $this->file );
+		$this->assets_dir    = trailingslashit( $this->dir ) . 'assets';
+		$this->assets_url    = esc_url( trailingslashit( plugins_url( '/assets/', $this->file ) ) );
 		$this->script_suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+
+		// Load dependencies.
+		$this->load_dependencies();
 
 		register_activation_hook( $this->file, array( $this, 'on_activation' ) );
 		register_deactivation_hook( $this->file, array( $this, 'on_deactivation' ) );
 		register_uninstall_hook( $this->file, array( 'Home_Money_Control', 'on_uninstall' ) );
 
-		// Load frontend JS & CSS
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ), 10 );
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ), 10 );
-
-		// Load admin JS & CSS
-		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ), 10, 1 );
-		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_styles' ), 10, 1 );
-
-		// Load API for generic admin functions
-		if ( is_admin() ) {
-			$this->admin = new Home_Money_Control_Admin_API();
-		}
-
-		// Handle localisation
+		// Handle localisation.
 		$this->load_plugin_textdomain();
-		add_action( 'init', array( $this, 'load_localisation' ), 0 );
 
-		//LOAD Menù
-		add_action( 'admin_menu', array( $this, 'add_menus' ) );
-	} // End __construct ()
-
-	/**
-	 * Wrapper function to register a new post type
-	 *
-	 * @param  string $post_type Post type name
-	 * @param  string $plural Post type item plural name
-	 * @param  string $single Post type item single name
-	 * @param  string $description Description of post type
-	 *
-	 * @return object              Post type class object
-	 */
-	public function register_post_type( $post_type = '', $plural = '', $single = '', $description = '' ) {
-
-		if ( ! $post_type || ! $plural || ! $single ) {
-			return;
-		}
-
-		$post_type = new Home_Money_Control_Post_Type( $post_type, $plural, $single, $description );
-
-		return $post_type;
 	}
 
+
 	/**
-	 * Wrapper function to register a new taxonomy
 	 *
-	 * @param  string $taxonomy Taxonomy name
-	 * @param  string $plural Taxonomy single name
-	 * @param  string $single Taxonomy plural name
-	 * @param  array $post_types Post types to which this taxonomy applies
-	 *
-	 * @return object             Taxonomy class object
+	 * Load the dependencies of this plugin.
 	 */
-	public function register_taxonomy( $taxonomy = '', $plural = '', $single = '', $post_types = array() ) {
+	private function load_dependencies() {
 
-		if ( ! $taxonomy || ! $plural || ! $single ) {
-			return;
-		}
+		// load Dependecy
+		require_once( __HMC_PATH__ . 'includes/utils/class-hmc-time.php' );
+		require_once( __HMC_PATH__ . 'includes/utils/class-hmc-utils.php' );
+		
+		/**
+		 * Load dependecies managed by composer.
+		 */
+		require_once $this->dir_path.'includes/database/class-hmc-database.php';
+		require_once $this->dir_path.'includes/api/class-hmc-restapi-category.php';
+		require_once $this->dir_path.'includes/api/class-hmc-restapi-transaction.php';
 
-		$taxonomy = new Home_Money_Control_Taxonomy( $taxonomy, $plural, $single, $post_types );
-
-		return $taxonomy;
+		$this->database_handler = new HMC_Database();
 	}
 
 	/**
 	 * Load frontend CSS.
-	 * @access  public
-	 * @since   1.0.0
-	 * @return void
 	 */
-	public function enqueue_styles() {
+	private function enqueue_styles() {
 		wp_register_style( __PNAMESPANE__ . '-frontend', esc_url( $this->assets_url ) . 'css/frontend.css', array(), $this->_version );
 		wp_enqueue_style( __PNAMESPANE__ . '-frontend' );
-	} // End enqueue_styles ()
+	}
 
 	/**
 	 * Load frontend Javascript.
-	 * @access  public
-	 * @since   1.0.0
-	 * @return  void
 	 */
-	public function enqueue_scripts() {
+	private function enqueue_scripts() {
 		wp_register_script( __PNAMESPANE__ . '-frontend', esc_url( $this->assets_url ) . 'js/frontend' . $this->script_suffix . '.js', array( 'jquery' ), $this->_version );
 		wp_enqueue_script( __PNAMESPANE__ . '-frontend' );
-	} // End enqueue_scripts ()
-
-	/**
-	 * Load admin CSS.
-	 * @access  public
-	 * @since   1.0.0
-	 * @return  void
-	 */
-	public function admin_enqueue_styles( $hook = '' ) {
-		wp_register_style( __PNAMESPANE__ . '-admin', esc_url( $this->assets_url ) . 'css/admin.css', array(), $this->_version );
-		wp_enqueue_style( __PNAMESPANE__ . '-admin' );
-	} // End admin_enqueue_styles ()
-
-	/**
-	 * Load admin Javascript.
-	 * @access  public
-	 * @since   1.0.0
-	 * @return  void
-	 */
-	public function admin_enqueue_scripts( $hook = '' ) {
-		wp_register_script( __PNAMESPANE__ . '-admin', esc_url( $this->assets_url ) . 'js/admin' . $this->script_suffix . '.js', array( 'jquery' ), $this->_version );
-		wp_enqueue_script( __PNAMESPANE__ . '-admin' );
-	} // End admin_enqueue_scripts ()
+	}
 
 	/**
 	 * Load plugin localisation
-	 * @access  public
-	 * @since   1.0.0
-	 * @return  void
 	 */
 	public function load_localisation() {
 		load_plugin_textdomain( 'home-money-control', false, dirname( plugin_basename( $this->file ) ) . '/lang/' );
-	} // End load_localisation ()
+	}
 
 	/**
-	 * Load plugin textdomain
-	 * @access  public
-	 * @since   1.0.0
-	 * @return  void
+	 * Load plugin textdomain.
 	 */
-	public function load_plugin_textdomain() {
+	private function load_plugin_textdomain() {
 		$domain = 'home-money-control';
 
 		$locale = apply_filters( 'plugin_locale', get_locale(), $domain );
 
 		load_textdomain( $domain, WP_LANG_DIR . '/' . $domain . '/' . $domain . '-' . $locale . '.mo' );
 		load_plugin_textdomain( $domain, false, dirname( plugin_basename( $this->file ) ) . '/lang/' );
-	} // End load_plugin_textdomain ()
-
-	/**
-	 * Main Home_Money_Control Instance
-	 *
-	 * Ensures only one instance of Home_Money_Control is loaded or can be loaded.
-	 *
-	 * @since 1.0.0
-	 * @static
-	 * @see Home_Money_Control()
-	 * @return Main Home_Money_Control instance
-	 */
-	public static function instance( $file = '', $version = '1.0.0' ) {
-		if ( is_null( self::$_instance ) ) {
-			self::$_instance = new self( $file, $version );
-		}
-
-		return self::$_instance;
-	} // End instance ()
-
-	/**
-	 * Cloning is forbidden.
-	 *
-	 * @since 1.0.0
-	 */
-	public function __clone() {
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?' ), $this->_version );
-	} // End __clone ()
-
-	/**
-	 * Unserializing instances of this class is forbidden.
-	 *
-	 * @since 1.0.0
-	 */
-	public function __wakeup() {
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?' ), $this->_version );
-	} // End __wakeup ()
+	}
 
 	/**
 	 * Installation. Runs on activation.
-	 * @access  public
-	 * @since   1.0.0
-	 * @return  void
 	 */
 	public function on_activation() {
-
-		HMC_Category::BUILD_DB();
-		HMC_Category::FILL_DB();
-		HMC_Transactions::BUILD_DB();
+		$this->database_handler->create();
+		$this->database_handler->fill();
 		update_option( __PNAMESPANE__ . '_version', $this->_version );
 	}
 
-
-	public static function on_deactivation() {
-
+	/**
+	 * Deactivation Function
+	 */
+	public function on_deactivation() {
 	}
 
-
+	/**
+	 * Uninstall Function
+	 */
 	public static function on_uninstall() {
-
-		HMC_Category::DROP_DB();
-		HMC_Transactions::DROP_DB();
+		HMC_Database::DROP();
 		delete_option( __PNAMESPANE__ . '_version' );
 	}
 
+	/**
+	 * Cloning is forbidden.
+	 */
+	public function __clone() {
+		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?' ), $this->_version );
+	}
 
-	public function add_menus() {
-		add_menu_page(
-			__( 'Home Money', $this->plugin_slug ),
-			__( 'Home Money', $this->plugin_slug ),
-			'manage_options',
-			$this->plugin_slug . "-id-root-menu",
-			array( $this, 'display_transaction_list_page' ),
-			'dashicons-chart-area'
-		);
-
+	/**
+	 * Unserializing instances of this class is forbidden.
+	 */
+	public function __wakeup() {
+		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?' ), $this->_version );
 	}
 
 
-	public function display_transaction_list_page() {
-		include_once( __HMC_PATH__ . 'view/transactions.php' );
-	}
+	/**
+	 *
+	 */
+	public function run() {
+		add_action( 'init', array( $this, 'load_localisation' ), 0 );
+		$restApiCategory = new HMC_RestAPI_Category($this->database_handler->get_category_entity());
+		$restApiTransaction = new HMC_RestAPI_Transaction($this->database_handler->get_category_entity(), $this->database_handler->get_transaction_entity() );
 
+
+	}
 
 }

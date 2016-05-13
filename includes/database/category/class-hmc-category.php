@@ -15,16 +15,13 @@ if (!class_exists('HMC_Category')) {
     {
 
         const TABLE_VERSION_KEY = "HMC_CATEGORY_DB_VERSION";
-        const TABLE_VERSION = "0.0.4";
+        const TABLE_VERSION = "0.0.5";
         const TABLE_NAME = "HMC_CATEGORY";
         const TYPE = 'type';
         const ID = 'id';
         const FATHER_ID = 'father_id';
         const NAME = 'name';
         const DESCRIPTION = 'description';
-
-
-
 
 
         static function DROP_DB()
@@ -51,7 +48,7 @@ if (!class_exists('HMC_Category')) {
                     UNIQUE KEY ' . self::ID . ' ( ' . self::ID . ' )
                   );';
 
-                require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+                require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
                 dbDelta($sql);
                 update_option(self::TABLE_VERSION_KEY, self::TABLE_VERSION);
             }
@@ -63,7 +60,7 @@ if (!class_exists('HMC_Category')) {
             $lines = file(__HMC_PATH__ . "assets/db/HMC_CATEGORY.DF");
             foreach ($lines as $line) {
                 $keydata = explode(";", $line);
-                self::ADD_DB(HMC_Voice::makeIt($keydata[0], $keydata[2], $keydata[3]));
+                self::ADD_DB(HMC_Voice::make_it($keydata[0], $keydata[2], $keydata[3]));
             }
         }
 
@@ -105,7 +102,7 @@ if (!class_exists('HMC_Category')) {
          * @param type $owner the owner of category, null is root category
          * @return array<voice>
          */
-        public function getVoices($id, $order_by = self::NAME, $order = "asc")
+        public function getVoices($id=null, $order_by = self::NAME, $order = "asc")
         {
             global $wpdb;
             $table_name = $wpdb->prefix . self::TABLE_NAME;
@@ -125,9 +122,43 @@ if (!class_exists('HMC_Category')) {
 
             if ($allVoice) {
                 foreach ($allVoice as $voice) {
-                    $v = HMC_Voice::makeIt($voice['id'], $voice['name'], $voice['description'],$voice['type']);
+                    $v = HMC_Voice::make_it($voice['id'], $voice['name'], $voice['description'],$voice['type']);
                     array_push($out, $v);
                 }
+            }
+            return $out;
+        }
+
+
+        /**
+         * Get Single view
+         *
+         * @param $id
+         * @return array
+         * @throws Error
+         */
+        public function getVoice($id)
+        {
+            global $wpdb;
+            $table_name = $wpdb->prefix . self::TABLE_NAME;
+            if (isset($id) && $id != null) {
+                $where = "  " . self::ID . "  =  '" . $id . "' ";
+            } else {
+                throw  new  Error("ID is mandatory");
+            }
+
+            $select = 'SELECT * ';
+            $select .= ' FROM ' . $table_name;
+            $select .= ' WHERE ' . $where;
+
+            $allVoice = $wpdb->get_results($select, ARRAY_A);
+            $out = array();
+
+            if ( count( $allVoice ) == 1 ) {
+                return HMC_Voice::make_it($allVoice[0]['id'], $allVoice[0]['name'], $allVoice[0]['description'],$allVoice[0]['type']);
+
+            }else{
+                throw  new  Error(" ID is mandatory");
             }
             return $out;
         }
@@ -157,10 +188,10 @@ if (!class_exists('HMC_Category')) {
             $where = array(self::ID => $id);
             $result = $wpdb->delete($table_name, $where, $where_format = null);
 
-
             if (!$result) {
                 throw new Exception("Error on delete " . id);
             }
+            return $result;
 
         }
 
