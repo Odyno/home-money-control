@@ -32,7 +32,6 @@ class HMC_UTILS {
 	 * @param bool $raise_error
 	 *
 	 * @return null
-	 * @throws Exception
 	 */
 	static function check_array_value( $key, $array, $raise_error = false ) {
 		if ( array_key_exists( $key, $array ) && ! empty( $array[ $key ] ) ) {
@@ -42,7 +41,6 @@ class HMC_UTILS {
 			throw new Exception( "Field " . $key . " not valid" );
 		}
 
-		return null;
 	}
 
 

@@ -230,10 +230,10 @@ if ( ! class_exists( 'HMC_RestAPI_Transaction' ) ) {
 		public function delete_item( $request ) {
 			try {
 				$id     = $request->get_param( 'id' );
-				$result = $this->transaction_handler->delBy($id);
+				$result = $this->transaction_handler->delBy( $id );
 
 				if ( $result ) {
-					return new WP_REST_Response( "done", 200 );
+					return new WP_REST_Response( 'done', 200 );
 				} else {
 					throw new Exception( 'Not Deleted!' );
 				}
@@ -312,7 +312,6 @@ if ( ! class_exists( 'HMC_RestAPI_Transaction' ) ) {
 		 * @return WP_Error|object $prepared_item
 		 */
 		protected function prepare_item_for_database( $request, $is_creation = false ) {
-
 			try {
 				$data = json_decode( $request->get_body(), true );
 
@@ -322,13 +321,15 @@ if ( ! class_exists( 'HMC_RestAPI_Transaction' ) ) {
 					$id = null;
 				}
 
+
 				$value = HMC_UTILS::check_array_value( 'value', $data, true );
 
 				$description = HMC_UTILS::check_array_value( 'description', $data, false );
 
 				$user_id = get_current_user_id();
 
-				$this->category_handler->getVoices( HMC_UTILS::check_array_value( 'category', $data, true ) );
+				//$this->category_handler->getVoices( HMC_UTILS::check_array_value( 'category', $data, true ) );
+				HMC_UTILS::check_array_value( 'category', $data, true );
 
 				$category = $this->category_handler->getVoices( HMC_UTILS::check_array_value( 'id', $data['category'], true ) );
 

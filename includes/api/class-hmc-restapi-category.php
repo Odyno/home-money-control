@@ -95,7 +95,7 @@ if ( ! class_exists( 'HMC_RestAPI_Category' ) ) {
 			) );
 
 
-			register_rest_route( $namespace, '/' . $base . '/types', array(
+			register_rest_route( $namespace, '/' . $base . '-types', array(
 				array(
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => array( $this, 'get_item_types' ),
@@ -103,7 +103,7 @@ if ( ! class_exists( 'HMC_RestAPI_Category' ) ) {
 					'args'                => array(),
 				),
 			) );
-			register_rest_route( $namespace, '/' . $base . '/types/(?P<id>[\w|-]+)', array(
+			register_rest_route( $namespace, '/' . $base . '-types/(?P<id>[\w|-]+)', array(
 					array(
 						'methods'             => WP_REST_Server::READABLE,
 						'callback'            => array( $this, 'get_item_type' ),
@@ -111,12 +111,6 @@ if ( ! class_exists( 'HMC_RestAPI_Category' ) ) {
 					),
 				)
 			);
-			
-			
-			
-			
-			
-			
 			register_rest_route( $namespace, '/' . $base . '/schema', array(
 				'methods'  => WP_REST_Server::READABLE,
 				'callback' => array( $this, 'get_public_item_schema' ),
@@ -164,7 +158,7 @@ if ( ! class_exists( 'HMC_RestAPI_Category' ) ) {
 		 * @return WP_Error|WP_REST_Response
 		 */
 		public function get_items( $request ) {
-			$items = $this->category_handler->getVoices();
+			$items = $this->category_handler->getVoices( null,'name', 'asc', $request->get_param( 'term' ) );
 			$data  = array();
 			foreach ( $items as $item ) {
 				$itemdata = $this->prepare_item_for_response( $item, $request );

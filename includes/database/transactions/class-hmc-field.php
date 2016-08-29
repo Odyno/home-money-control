@@ -121,7 +121,7 @@ if (!class_exists('HMC_Field')) {
                 'id' => $this->id,
                 'posting_date' =>  $this->posting_date != null ? $this->posting_date->toArray() : null,
                 'value_date' => $this->value_date !=null ? $this->value_date->toArray() : null,
-                'value' => intval($this->value),
+                'value' => floatval($this->value),
                 'category' => $this->category->toArray(),
                 'description' => $this->description,
                 'user_id' => $this->user_id

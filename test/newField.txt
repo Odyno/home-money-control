@@ -1,0 +1,7 @@
+{
+"value": 23.2,
+"description":" pippo pluto ",
+"category" : { "id" : "5382f3d8b0be82-39147732" },
+"posting_date":"2015-10-25T13:34:52.320Z",
+"value_date":"2015-10-25T13:34:00.000Z"
+}

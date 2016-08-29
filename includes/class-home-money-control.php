@@ -120,6 +120,7 @@ class Home_Money_Control {
 		$this->assets_dir    = trailingslashit( $this->dir ) . 'assets';
 		$this->assets_url    = esc_url( trailingslashit( plugins_url( '/assets/', $this->file ) ) );
 		$this->script_suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+		
 
 		// Load dependencies.
 		$this->load_dependencies();
@@ -131,6 +132,9 @@ class Home_Money_Control {
 		// Handle localisation.
 		$this->load_plugin_textdomain();
 
+	}
+	public function get_version(){
+		return $this->_version;
 	}
 
 
@@ -150,6 +154,13 @@ class Home_Money_Control {
 		require_once $this->dir_path.'includes/database/class-hmc-database.php';
 		require_once $this->dir_path.'includes/api/class-hmc-restapi-category.php';
 		require_once $this->dir_path.'includes/api/class-hmc-restapi-transaction.php';
+
+
+		require_once( $this->dir_path.'admin/class-home-money-control-admin.php' );
+		if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
+			new Home_Money_Control_Admin($this);
+		}
+
 
 		$this->database_handler = new HMC_Database();
 	}

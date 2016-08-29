@@ -47,7 +47,7 @@
  */
 
 // If this file is called directly, abort.
-if (!defined('WPINC')) {
+if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
@@ -66,8 +66,7 @@ define( '__PNAMESPANE__', 'home_money_control' );
 /**
  * Dependecy with restapi plugin.
  */
-require_once(plugin_dir_path( __HMC_FILE__ ) . '../rest-api/plugin.php');
-
+require_once( __HMC_PATH__  . '../rest-api/plugin.php' );
 
 
 // Load plugin class files.
@@ -88,8 +87,15 @@ require_once( 'includes/utils/class-hmc-utils.php' );
  */
 function run_home_money_control() {
 	$plugin = new Home_Money_Control( __FILE__, __HMC_VERSION__ );
+	
+
 	$plugin->run();
 
 }
 
 run_home_money_control();
+
+
+
+
+

@@ -1,0 +1,224 @@
+@import "partials/elements.less";
+
+@color_1: #333333;
+@color_2: #777777;
+@color_3: #555555;
+@color_4: #336699;
+@color_5: #999;
+@color_6: #888;
+@font-family_1: inherit;
+@red: red;
+@green: green;
+@font-conunt-type: #fff;
+@entrate: blue;
+@uscite_fisse: green;
+@spese_di_sopravvivenza: green;
+@spese_options: lightblue;
+@spese_cultura: red;
+@spese_extra: orange;
+
+#countview {
+  footer {
+    display: none;
+    margin: 0 -20px -20px -20px;
+    overflow: hidden;
+    color: @color_3;
+    background: #f4fce8;
+    border-top: 1px solid #ededed;
+    padding: 0 20px;
+    line-height: 37px;
+  }
+
+  #main {
+    display: none;
+
+    #count-list {
+      margin: 10px 0;
+      padding: 0;
+      list-style: none;
+      .count_type {
+        width: 150px;
+      }
+      li {
+        position: relative;
+
+        &:last-child {
+          border-bottom: none;
+        }
+        &:hover {
+          background: #eee;
+          border-bottom: 1px dotted #cccccc;
+
+          .destroy, .change, .apply {
+            display: block;
+          }
+
+        }
+        .view {
+
+          .count_type {
+            display: inline-block;
+            -webkit-box-sizing: content-box;
+            -moz-box-sizing: content-box;
+            box-sizing: content-box;
+
+            padding: 3px;
+            -webkit-border-radius: 3px;
+            border-radius: 3px;
+            font: normal 9px/normal serif @font-conunt-type;
+            -o-text-overflow: clip;
+            text-overflow: clip;
+            width: 150px;
+            text-align: center;
+
+          }
+
+          &:hover {
+            p {
+              display: block;
+            }
+          }
+          span {
+            float: left;
+            margin: 0 15px 0 0;
+          }
+          h4 {
+            font: bold 15px/1.5 Helvetica, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+          }
+
+          p {
+            font: 200 12px/1.5 Georgia, Times New Roman, serif;
+            margin: 0;
+            padding: 0;
+            display: none;
+          }
+
+        }
+        .edit {
+          display: none;
+        }
+      }
+      .change {
+        position: absolute;
+        right: 25px;
+        display: none;
+        cursor: pointer;
+        top: 0px;
+        width: 20px;
+        height: 20px;
+        &:hover {
+          background-position: 0 -20px;
+        }
+      }
+
+      .apply {
+        position: absolute;
+        right: 5px;
+        display: none;
+        cursor: pointer;
+        width: 20px;
+        height: 20px;
+        top: 0px;
+        &:hover {
+          background-position: 0 -20px;
+          color: @green;
+        }
+      }
+
+      .destroy {
+        position: absolute;
+        right: 5px;
+        display: none;
+        cursor: pointer;
+        width: 20px;
+        height: 20px;
+        top: 0px;
+        &:hover {
+          background-position: 0 -20px;
+          color: @red;
+        }
+
+      }
+
+      li.editing {
+        border: 1px solid black;
+        padding: 5px;
+        &:last-child {
+          margin-bottom: -1px;
+        }
+        .edit {
+          display: block;
+        }
+        .view {
+          display: none;
+        }
+      }
+    }
+  }
+
+  #counts-count {
+    span {
+      font-weight: bold;
+    }
+  }
+
+}
+
+.count_type {
+  display: inline-block;
+  box-sizing: content-box;
+  padding: 3px;
+  border-radius: 3px;
+  font: normal 9px/normal serif @font-conunt-type;
+  text-overflow: ellipsis !important;
+  text-align: center;
+
+  &.type_0 {
+    background: @spese_di_sopravvivenza;
+    &:before {
+      content: "Essenziale";
+      color: @font-conunt-type;
+    }
+  }
+  &.type_1 {
+    background: @spese_options;
+    &:before {
+      content: "Servizi optional";
+      color: @font-conunt-type;
+
+    }
+  }
+  &.type_2 {
+    background: @spese_cultura;
+    &:before {
+      content: "Hobbies e tempo libero";
+      color: @font-conunt-type;
+    }
+  }
+  &.type_3 {
+    background: @spese_extra;
+    &:before {
+      content: "Imprevisti extra";
+      color: @font-conunt-type;
+
+    }
+  }
+  &.type_4 {
+    background: @entrate;
+    &:before {
+      content: "Entrate";
+      color: @font-conunt-type;
+
+    }
+  }
+  &.type_5 {
+    background: @uscite_fisse;
+    &:before {
+      content: "Uscite fisse";
+      color: @font-conunt-type;
+
+    }
+  }
+}

@@ -1,0 +1,282 @@
+<?php
+
+/**
+ * My Home Finance.
+ *
+ * @package   Home_Money_Control_Admin
+ * @author    Alessandro Staniscia <alessandro@staniscia.net>
+ * @license   GPL-2.0+
+ * @link      http://www.staniscia.net/home_money_control
+ * @copyright 2014 Alessandro Staniscia
+ *
+ * @package Home_Money_Control_Admin
+ * @author  Alessandro Staniscia <alessandro@staniscia.net>
+ */
+
+// If this file is called directly, abort.
+if ( ! defined( 'WPINC' ) ) {
+	die;
+}
+
+/**
+ * Class Home_Money_Control_Admin
+ */
+class Home_Money_Control_Admin {
+
+
+	/**
+	 * Slug of the plugin screen.
+	 *
+	 * @since    1.0.0
+	 *
+	 * @var      string
+	 */
+	protected $plugin_screen_hook_suffix = null;
+
+	/**
+	 * Initialize the plugin by loading admin scripts & styles and adding a
+	 * settings page and menu.
+	 *
+	 * @param $owner    class   main class
+	 */
+	public function __construct( $owner ) {
+		/*
+		 * Call $plugin_slug from public plugin class.
+		 */
+		$plugin = $owner;
+		$this->plugin_slug = $plugin->plugin_slug;
+		$this->version = $plugin->get_version();
+
+		// Load admin style sheet and JavaScript.
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_styles' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
+
+		// Add the options page and menu item.
+		add_action( 'admin_menu', array( $this, 'add_plugin_admin_menu' ) );
+
+
+		// Add an action link pointing to the options page.
+		$plugin_basename = plugin_basename( plugin_dir_path( __DIR__ ) . $this->plugin_slug . '.php' );
+		add_filter( 'plugin_action_links_' . $plugin_basename, array( $this, 'add_action_links' ) );
+	}
+
+
+	/**
+	 * Register and enqueue admin-specific style sheets
+	 *
+	 * @since     1.0.0
+	 *
+	 * @return    null    Return early if no settings page is registered.
+	 */
+	public function enqueue_admin_styles( $hook ) {
+
+		if ( ! isset( $this->plugin_screen_hook_suffix ) ) {
+			return;
+		}
+
+		$screen = get_current_screen();
+		if ( $this->plugin_screen_hook_suffix == $screen->id ) {
+			wp_enqueue_style( $this->plugin_slug . '-admin-styles', plugins_url( 'assets/css/admin.css', __HMC_FILE__ ), array(), $this->version );
+		}
+
+		if ( strpos( $hook, 'HMC' ) !== false ) {
+			wp_enqueue_style( $this->plugin_slug . '-admin-styles', plugins_url( 'assets/css/admin.css', __HMC_FILE__ ), array(), $this->version );
+		}
+
+		if ( strpos( $hook, 'HMC-id-menu-reports-list' ) !== false ) {
+			wp_enqueue_style( 'wp-jquery-ui-dialog' );
+			wp_enqueue_style( $this->plugin_slug . '-fullcalendar-style', plugins_url( 'lib/fullcalendar/dist/fullcalendar.min.css', __HMC_FILE__ ), array(), $this->version );
+			wp_enqueue_style( $this->plugin_slug . '-fullcalendar-style-2', plugins_url( 'lib/fullcalendar/dist/fullcalendar.print.css', __HMC_FILE__ ), array( $this->plugin_slug . '-fullcalendar-style' ), $this->version, 'print' );
+		}
+
+	}
+
+	/**
+	 * Register and enqueue admin-specific JavaScript.
+	 *
+	 * @since     1.0.0
+	 *
+	 * @return    null    Return early if no settings page is registered.
+	 */
+	public function enqueue_admin_scripts( $hook ) {
+
+		if ( ! isset( $this->plugin_screen_hook_suffix ) ) {
+			return;
+		}
+
+		$screen = get_current_screen();
+		/* if ( $this->plugin_screen_hook_suffix === $screen->id ) {
+		}*/
+
+
+		if ( strpos( $hook, 'HMC' ) !== false ) {
+			wp_enqueue_script( $this->plugin_slug . '-admin-base-script', plugins_url( 'assets/js/admin/base_admin.js', __HMC_FILE__ ), array(
+				'jquery',
+				'backbone',
+				'underscore'
+			), $this->version );
+		}
+
+		/*
+				if ( strpos( $hook, 'HMC-id-root-menu' ) !== false ) {
+					//none
+				}
+		*/
+
+		if ( strpos( $hook, 'HMC-id-menu-counts' ) !== false ) {
+			wp_enqueue_script( $this->plugin_slug . '-admin-model-counts-script', plugins_url( 'assets/js/admin/models/counts.js', __HMC_FILE__ ), array( $this->plugin_slug . '-admin-base-script' ), $this->version );
+			wp_enqueue_script( $this->plugin_slug . '-admin-views-counts-script', plugins_url( 'assets/js/admin/views/page_count_view.js', __HMC_FILE__ ), array(
+				$this->plugin_slug . '-admin-base-script',
+				$this->plugin_slug . '-admin-model-counts-script'
+			), $this->version );
+		}
+
+
+		if ( strpos( $hook, 'HMC-id-menu-reports-list' ) !== false ) {
+			wp_enqueue_script( $this->plugin_slug . '-moment-script', plugins_url( 'lib/moment/min/moment-with-locales.min.js', __HMC_FILE__ ), array(), $this->version );
+			wp_enqueue_script( $this->plugin_slug . '-fullcalendar-script', plugins_url( 'lib/fullcalendar/dist/fullcalendar.min.js', __HMC_FILE__ ), array(
+				'jquery',
+				$this->plugin_slug . '-moment-script'
+			), $this->version );
+			wp_enqueue_script( $this->plugin_slug . '-admin-model-counts-script', plugins_url( 'assets/js/admin/models/counts.js', __HMC_FILE__ ), array( $this->plugin_slug . '-admin-base-script' ), $this->version );
+			wp_enqueue_script( $this->plugin_slug . '-admin-views-counts-script', plugins_url( 'assets/js/admin/views/page_report_view.js', __HMC_FILE__ ), array(
+				$this->plugin_slug . '-fullcalendar-script',
+				$this->plugin_slug . '-admin-base-script',
+				$this->plugin_slug . '-admin-model-counts-script',
+				'jquery-ui-dialog',
+				'jquery-ui-autocomplete'
+			), $this->version );
+
+		}
+
+
+	}
+
+	/**
+	 * Register the administration menu for this plugin into the WordPress Dashboard menu.
+	 *
+	 * @since    1.0.0
+	 */
+	public function add_plugin_admin_menu() {
+
+		/*
+		 * Add a settings page for this plugin to the Settings menu.
+		 *
+		 * NOTE:  Alternative menu locations are available via WordPress administration menu functions.
+		 *
+		 *        Administration Menus: http://codex.wordpress.org/Administration_Menus
+		 *
+		 * - Change 'Page Title' to the title of your plugin admin page
+		 * - Change 'Menu Text' to the text for menu item for the plugin settings page
+		 * - Change 'manage_options' to the capability you see fit
+		 *   For reference: http://codex.wordpress.org/Roles_and_Capabilities
+		 */
+		$this->plugin_screen_hook_suffix = add_options_page(
+			__( 'Home Money Control - Admin Page', $this->plugin_slug ),
+			__( 'Home Money Control', $this->plugin_slug ),
+			'edit_posts',
+			$this->plugin_slug,
+			array( $this, 'display_plugin_admin_page' )
+		);
+
+		add_menu_page(
+			__( 'Home Money Control - Dashboard', $this->plugin_slug ),
+			__( 'Home Money Control', $this->plugin_slug ),
+			'edit_posts',
+			$this->plugin_slug . '-id-root-menu',
+			array( $this, 'display_dashboard_page' ),
+			'dashicons-chart-area'
+		);
+
+		/* add_submenu_page(
+			$this->plugin_slug . '-id-root-menu',
+			__( 'Home Money Control - Dashboard', $this->plugin_slug ),
+			__( 'Dashboard', $this->plugin_slug ),
+			'edit_posts',
+			$this->plugin_slug . '-id-menu-dashboard',
+			array( $this, 'display_dashboard_page' )
+		);*/
+
+		add_submenu_page(
+			$this->plugin_slug . '-id-root-menu',
+			__( 'Home Money Control - Reports page', $this->plugin_slug ),
+			__( 'Reports', $this->plugin_slug ),
+			'edit_posts',
+			$this->plugin_slug . '-id-menu-reports-list',
+			array( $this, 'display_reports_page' )
+		);
+
+		/*
+				add_submenu_page(
+				//$this->plugin_slug."-id-root-menu",
+					$this->plugin_slug . "-id-menu-transaction-list",
+					__( 'Add transaction', $this->plugin_slug ),
+					__( 'Add transaction', $this->plugin_slug ),
+					'edit_transaction',
+					$this->plugin_slug . "-id-menu-transaction",
+					array( $this, 'display_transaction_edit_page' )
+				);
+		*/
+
+
+		add_submenu_page(
+			$this->plugin_slug . '-id-root-menu',
+			__( 'Home Money Control - Piano dei Conti', $this->plugin_slug ),
+			__( 'Piano dei Conti', $this->plugin_slug ),
+			'edit_posts',
+			$this->plugin_slug . '-id-menu-counts',
+			array( $this, 'display_counts_page' )
+		);
+
+	}
+
+	/**
+	 * Render the settings page for this plugin.
+	 *
+	 * @since    1.0.0
+	 */
+	public function display_plugin_admin_page() {
+		include_once( __HMC_PATH__ . 'admin/views/admin.inc.php' );
+	}
+
+	/**
+	 *
+	 */
+	public function display_dashboard_page() {
+		include_once( __HMC_PATH__ . 'admin/views/dashboard.inc.php' );
+	}
+
+
+	/**
+	 *
+	 */
+	public function display_counts_page() {
+		include_once( __HMC_PATH__ . 'admin/views/counts.inc.php' );
+	}
+
+
+	/**
+	 *
+	 */
+	public function display_reports_page() {
+		include_once( __HMC_PATH__ . 'admin/views/reports.inc.php' );
+	}
+
+	/**
+	 * Add settings action link to the plugins page.
+	 *
+	 * @since    1.0.0
+	 */
+	public function add_action_links( $links ) {
+
+		return array_merge(
+			array(
+				'settings' => '<a href="' . admin_url( 'options-general.php?page=' . $this->plugin_slug ) . '">' . __( 'Settings', $this->plugin_slug ) . '</a>'
+			),
+			$links
+		);
+
+	}
+
+
+}
