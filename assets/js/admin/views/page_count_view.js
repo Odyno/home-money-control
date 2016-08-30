@@ -43,17 +43,20 @@ jQuery(document).ready(function ($) {
             "change input": "changed",
             "change select": "changed",
             "change textarea": "changed",
-            "click a.save": "new"
+            "click a.save": "save"
         },
 
         initialize: function () {
-
             this.listenTo(this.model, 'change', this.render);
             this.listenTo(this.model, 'destroy', this.remove);
         },
 
         render: function () {
-            this.$el.html(this.template(this.model.toJSON()));
+            var json_model=this.model.toJSON();
+            this.$el.html(this.template(json_model));
+            if (json_model['name'] === "unamed"){
+                this.set_edit_mode(true);
+            }
             return this;
         },
 
@@ -78,7 +81,7 @@ jQuery(document).ready(function ($) {
 
         },
 
-        new:function (evt) {
+        save:function (evt) {
             var changed = evt.currentTarget;
             var ivalue = $(evt.currentTarget).val();
             var iname = $(evt.currentTarget).attr('name');
@@ -91,13 +94,10 @@ jQuery(document).ready(function ($) {
         },
 
 
-
         clear_model: function () {
             if (confirm('Are you sure you want to DELETE this Count from database?')) {
                 this.model.destroy();
             }
-            alert("Done!");
-
         }
 
     });
@@ -116,7 +116,7 @@ jQuery(document).ready(function ($) {
 
         // Delegated events for creating new items, and clearing completed ones.
         events: {
-            "keypress #new-todo": "createOnEnter"
+            "click a.create": "createOnCount"
         },
 
         // At initialization we bind to the relevant events on the `Todos`
@@ -127,9 +127,12 @@ jQuery(document).ready(function ($) {
             this.input = this.$("#new-todo");
 
             this.listenTo(Counts, 'add', this.addOne);
+            this.listenTo(Counts, 'remove', this.notifyRemove);
+            this.listenTo(Counts, 'error', this.notifyError);
             this.listenTo(Counts, 'all', this.render);
 
             this.footer = this.$('footer');
+            this.header = this.$('header');
             this.main = $('#main');
 
             Counts.fetch();
@@ -147,36 +150,31 @@ jQuery(document).ready(function ($) {
 
         },
 
+        notifyRemove: function () {
+           this.header.append('<div class="notice notice-info is-dismissible"><p>Delete Done!</p></div>')
+        },
+
+        notifyError: function () {
+            this.header.append('<div class="notice notice-warning is-dismissible"><p>Error appears!</p></div>')
+        },
+
+
         // Add a single todo item to the list by creating a view for it, and
         // appending its element to the `<ul>`.
         addOne: function (count) {
+            console.log("called");
             var view = new HMC.Views.Count({model: count});
-            this.$("#count-list").append(view.render().el);
+            this.$("#count-list").prepend(view.render().el);
         },
 
 
-        // If you hit return in the main input field, create new **Todo** model,
-        // persisting it to *localStorage*.
-        createOnEnter: function (e) {
-            if (e.keyCode != 13) return;
-            if (!this.input.val()) return;
 
-            Todos.create({title: this.input.val()});
-            this.input.val('');
+        createOnCount: function (e) {
+            var data = new HMC.Models.Count();
+            data.set({ "name" : "unamed" });
+            return Counts.create(data);
         },
-
-        // Clear all done todo items, destroying their models.
-        clearCompleted: function () {
-            _.invoke(Todos.done(), 'destroy');
-            return false;
-        },
-
-        toggleAllComplete: function () {
-            var done = this.allCheckbox.checked;
-            Todos.each(function (todo) {
-                todo.save({'done': done});
-            });
-        }
+        
 
     });
 

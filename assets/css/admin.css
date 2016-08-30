@@ -4,6 +4,11 @@
     A set of useful LESS mixins
     More info at: http://lesselements.com
   ---------------------------------------------------*/
+#countview header .align-right {
+  display: inline-block;
+  width: 100%;
+  text-align: right;
+}
 #countview footer {
   display: none;
   margin: 0 -20px -20px -20px;
@@ -33,7 +38,6 @@
 }
 #countview #main #count-list li:hover {
   background: #eee;
-  border-bottom: 1px dotted #cccccc;
 }
 #countview #main #count-list li:hover .destroy,
 #countview #main #count-list li:hover .change,
@@ -70,7 +74,8 @@
   font: 200 12px/1.5 Georgia, Times New Roman, serif;
   margin: 0;
   padding: 0;
-  display: none;
+  display: inline;
+  vertical-align: top;
 }
 #countview #main #count-list li .edit {
   display: none;

@@ -25,11 +25,18 @@
 ?>
 <div class="wrap">
 
-	<h2><?php echo esc_html( get_admin_page_title() ); ?> <input class="button-primary" value="New Input"/></h2>
+	<h2><?php echo esc_html( get_admin_page_title() ); ?></h2>
 
 	<div id="countview">
+		<header>
+			<span class="align-right"><a class="create button-primary" > Create new</a></span>
+		</header>
 		<section id="main">
-			<ul id="count-list"></ul>
+			<div class="postbox">
+				<div class="inside">
+				<ul id="count-list"></ul>
+					</div>
+			</div>
 		</section>
 
 		<footer>
@@ -52,6 +59,15 @@
 
 		<table class="edit form-table  ">
 			<tbody>
+			<tr>
+				<th>
+					Name
+				</th>
+				<td>
+					<input class="large-text" type="text" name="name" value="<%- name %>"/>
+					<p class="description">Select the Mnemonic name</p>
+				</td>
+			</tr>
 			<tr>
 				<th>
 					Nature of Count
@@ -89,21 +105,13 @@
 					</p>
 				</td>
 			</tr>
-			<tr>
-				<th>
-					Name
-				</th>
-				<td>
-					<input class="large-text" type="text" name="name" value="<%- name %>"/>
-					<p class="description">Select the significative Name</p>
-				</td>
-			</tr>
+
 			<tr>
 				<th>
 					Description
 				</th>
 				<td>
-					<textarea cols="80" rows="10" class="all-options" name="description"><%- description %></textarea>
+					<textarea cols="80" rows="10" class="large-text" name="description"><%- description %></textarea>
 					<p class="description">Short description of this operation</p>
 				</td>
 			</tr>
