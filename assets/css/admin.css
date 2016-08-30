@@ -4,7 +4,7 @@
     A set of useful LESS mixins
     More info at: http://lesselements.com
   ---------------------------------------------------*/
-#countview header .align-right {
+header .align-right {
   display: inline-block;
   width: 100%;
   text-align: right;

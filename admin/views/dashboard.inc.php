@@ -26,6 +26,9 @@
 <div class="wrap">
 
 	<h2><?php echo esc_html( get_admin_page_title() ); ?></h2>
+	<header>
+		<span class="align-right"><a class="button dashicons-before dashicons-tag " href="<?php echo admin_url('/admin.php?page=HMC-id-menu-reports-list'); ?>" >Reports</a> <a class="button dashicons-before dashicons-category " href="<?php echo admin_url('/admin.php?page=HMC-id-menu-counts'); ?>" >Counts</a> </span>
+	</header>
 
 	<!-- @TODO: Provide markup for your options page here. -->
 

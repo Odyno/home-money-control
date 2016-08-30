@@ -29,7 +29,7 @@
 
 	<div id="countview">
 		<header>
-			<span class="align-right"><a class="create button-primary" > Create new</a></span>
+			<span class="align-right"><a class="create dashicons-before dashicons-plus button-primary" >Create new</a></span>
 		</header>
 		<section id="main">
 			<div class="postbox">

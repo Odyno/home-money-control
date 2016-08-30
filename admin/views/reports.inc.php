@@ -26,7 +26,7 @@
 <div class="wrap">
 
 	<h2><?php echo esc_html( get_admin_page_title() ); ?></h2>
-    <div class="reset"></div>
+
 	<div id='hmc_calendar'></div>
 
 	<div id='report_dialog' class='dialog ui-helper-hidden'>
