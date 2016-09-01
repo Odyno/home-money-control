@@ -52,6 +52,16 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 
+require 'plugin-update-checker/plugin-update-checker.php';
+$className = PucFactory::getLatestClassVersion('PucGitHubChecker');
+$myUpdateChecker = new $className(
+	'https://github.com/Odyno/home-money-control',
+	__FILE__,
+	'master'
+);
+
+
+
 /**
  * The core plugin definition and class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
