@@ -69,26 +69,8 @@ class Home_Money_Control_Admin {
 	 * @return    null    Return early if no settings page is registered.
 	 */
 	public function enqueue_admin_styles( $hook ) {
-
-		if ( ! isset( $this->plugin_screen_hook_suffix ) ) {
-			return;
-		}
-
-		$screen = get_current_screen();
-		if ( $this->plugin_screen_hook_suffix == $screen->id ) {
-			wp_enqueue_style( $this->plugin_slug . '-admin-styles', plugins_url( 'assets/css/admin.css', __HMC_FILE__ ), array(), $this->version );
-		}
-
-		if ( strpos( $hook, 'HMC' ) !== false ) {
-			wp_enqueue_style( $this->plugin_slug . '-admin-styles', plugins_url( 'assets/css/admin.css', __HMC_FILE__ ), array(), $this->version );
-		}
-
-		if ( strpos( $hook, 'HMC-id-menu-reports-list' ) !== false ) {
-			wp_enqueue_style( 'wp-jquery-ui-dialog' );
-			wp_enqueue_style( $this->plugin_slug . '-fullcalendar-style', plugins_url( 'lib/fullcalendar/dist/fullcalendar.min.css', __HMC_FILE__ ), array(), $this->version );
-			wp_enqueue_style( $this->plugin_slug . '-fullcalendar-style-2', plugins_url( 'lib/fullcalendar/dist/fullcalendar.print.css', __HMC_FILE__ ), array( $this->plugin_slug . '-fullcalendar-style' ), $this->version, 'print' );
-		}
-
+		//$this->enqueue_styles( $hook );
+		$this->apply_styles( $hook );
 	}
 
 	/**
@@ -99,58 +81,60 @@ class Home_Money_Control_Admin {
 	 * @return    null    Return early if no settings page is registered.
 	 */
 	public function enqueue_admin_scripts( $hook ) {
+		//$this->enqueue_scripts( $hook );
+		$this->apply_scripts( $hook );
+	}
+
+
+	public function apply_styles( $hook ){
 
 		if ( ! isset( $this->plugin_screen_hook_suffix ) ) {
 			return;
 		}
 
 		$screen = get_current_screen();
-		/* if ( $this->plugin_screen_hook_suffix === $screen->id ) {
-		}*/
-
+		if ( $this->plugin_screen_hook_suffix === $screen->id ) {
+			wp_enqueue_style( $this->plugin_slug . '-admin-styles');
+		}
 
 		if ( strpos( $hook, 'HMC' ) !== false ) {
-			wp_enqueue_script( $this->plugin_slug . '-admin-base-script', plugins_url( 'assets/js/admin/base_admin.js', __HMC_FILE__ ), array(
-				'jquery',
-				'backbone',
-				'underscore'
-			), $this->version );
+			wp_enqueue_style( $this->plugin_slug . '-admin-styles');
 		}
-
-		/*
-				if ( strpos( $hook, 'HMC-id-root-menu' ) !== false ) {
-					//none
-				}
-		*/
-
-		if ( strpos( $hook, 'HMC-id-menu-counts' ) !== false ) {
-			wp_enqueue_script( $this->plugin_slug . '-admin-model-counts-script', plugins_url( 'assets/js/admin/models/counts.js', __HMC_FILE__ ), array( $this->plugin_slug . '-admin-base-script' ), $this->version );
-			wp_enqueue_script( $this->plugin_slug . '-admin-views-counts-script', plugins_url( 'assets/js/admin/views/page_count_view.js', __HMC_FILE__ ), array(
-				$this->plugin_slug . '-admin-base-script',
-				$this->plugin_slug . '-admin-model-counts-script'
-			), $this->version );
-		}
-
 
 		if ( strpos( $hook, 'HMC-id-menu-reports-list' ) !== false ) {
-			wp_enqueue_script( $this->plugin_slug . '-moment-script', plugins_url( 'lib/moment/min/moment-with-locales.min.js', __HMC_FILE__ ), array(), $this->version );
-			wp_enqueue_script( $this->plugin_slug . '-fullcalendar-script', plugins_url( 'lib/fullcalendar/dist/fullcalendar.min.js', __HMC_FILE__ ), array(
-				'jquery',
-				$this->plugin_slug . '-moment-script'
-			), $this->version );
-			wp_enqueue_script( $this->plugin_slug . '-admin-model-counts-script', plugins_url( 'assets/js/admin/models/counts.js', __HMC_FILE__ ), array( $this->plugin_slug . '-admin-base-script' ), $this->version );
-			wp_enqueue_script( $this->plugin_slug . '-admin-views-counts-script', plugins_url( 'assets/js/admin/views/page_report_view.js', __HMC_FILE__ ), array(
-				$this->plugin_slug . '-fullcalendar-script',
-				$this->plugin_slug . '-admin-base-script',
-				$this->plugin_slug . '-admin-model-counts-script',
-				'jquery-ui-dialog',
-				'jquery-ui-autocomplete'
-			), $this->version );
-
+			wp_enqueue_style( 'wp-jquery-ui-dialog' );
+			wp_enqueue_style( $this->plugin_slug . '-fullcalendar-style');
 		}
 
+	}
+	
+
+	public function apply_scripts($hook){
+
+		if ( ! isset( $this->plugin_screen_hook_suffix ) ) {
+			return;
+		}
+
+		$screen = get_current_screen();
+
+		if ( strpos( $hook, 'HMC' ) !== false ) {
+			wp_enqueue_script( $this->plugin_slug . '-admin-base-script' );
+		}
+
+		if ( strpos( $hook, 'HMC-id-menu-counts' ) !== false ) {
+			wp_enqueue_script( $this->plugin_slug . '-admin-model-counts-script' );
+			wp_enqueue_script( $this->plugin_slug . '-admin-views-counts-script' );
+		}
+
+		if ( strpos( $hook, 'HMC-id-menu-reports-list' ) !== false ) {
+			wp_enqueue_script( $this->plugin_slug . '-moment-script' );
+			wp_enqueue_script( $this->plugin_slug . '-fullcalendar-script' );
+			wp_enqueue_script( $this->plugin_slug . '-admin-model-counts-script' );
+			wp_enqueue_script( $this->plugin_slug . '-admin-views-report-script' );
+		}
 
 	}
+
 
 	/**
 	 * Register the administration menu for this plugin into the WordPress Dashboard menu.

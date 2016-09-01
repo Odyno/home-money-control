@@ -10,12 +10,12 @@
 @red: red;
 @green: green;
 @font-conunt-type: #fff;
-@entrate: blue;
-@uscite_fisse: green;
+@entrate: green;
+@uscite_fisse: blue;
 @spese_di_sopravvivenza: green;
 @spese_options: lightblue;
-@spese_cultura: red;
-@spese_extra: orange;
+@spese_cultura: orange;
+@spese_extra: red;
 
 header {
 
@@ -24,11 +24,10 @@ header {
     width: 100%;
     text-align: right;
   }
+
 }
 
 #countview {
-
-
 
   footer {
     display: none;
@@ -177,18 +176,17 @@ header {
 }
 
 .count_type {
-  display: inline-block;
-  box-sizing: content-box;
+  display: block;
   padding: 3px;
   border-radius: 3px;
   font: normal 9px/normal serif @font-conunt-type;
-  text-overflow: ellipsis !important;
+  text-overflow: ellipsis;
   text-align: center;
 
   &.type_0 {
     background: @spese_di_sopravvivenza;
     &:before {
-      content: "Essenziale";
+      content: "Essenziali";
       color: @font-conunt-type;
     }
   }

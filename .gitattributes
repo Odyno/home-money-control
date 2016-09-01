@@ -1,0 +1,6 @@
+/assets/css/partials  export-ignore
+/node_modules  export-ignore
+/Gruntfile.*   export-ignore
+/**/*.less     export-ignore
+/**/*.coffee   export-ignore
+/deploy.sh     export-ignore

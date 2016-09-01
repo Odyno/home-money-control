@@ -38,6 +38,11 @@ class Home_Money_Control {
 	 */
 	private $_version;
 
+
+	/**
+	 */
+	private $add_script_to_page;
+
 	/**
 	 * The main plugin file.
 	 *
@@ -110,7 +115,7 @@ class Home_Money_Control {
 	 */
 	public function __construct( $file, $version ) {
 
-		$this->_version    = $version;
+		$this->version    = $version;
 		$this->plugin_slug = 'HMC';
 
 		// Load plugin environment variables.
@@ -120,7 +125,12 @@ class Home_Money_Control {
 		$this->assets_dir    = trailingslashit( $this->dir ) . 'assets';
 		$this->assets_url    = esc_url( trailingslashit( plugins_url( '/assets/', $this->file ) ) );
 		$this->script_suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-		
+
+
+		// Enqueue style sheet and JavaScript.
+		add_action( 'init', array( $this, 'enqueue_scripts' ) );
+		add_action( 'init', array( $this, 'enqueue_styles' ) );
+
 
 		// Load dependencies.
 		$this->load_dependencies();
@@ -132,9 +142,14 @@ class Home_Money_Control {
 		// Handle localisation.
 		$this->load_plugin_textdomain();
 
+		add_shortcode( 'HMC_FORM', array( $this, 'manage_short_code' ) );
+
+		add_action( 'wp_footer', array( $this, 'apply_styles' ) );
+		add_action( 'wp_footer', array( $this, 'apply_scripts' ) );
 	}
-	public function get_version(){
-		return $this->_version;
+
+	public function get_version( ){
+		return $this->version;
 	}
 
 
@@ -163,23 +178,78 @@ class Home_Money_Control {
 
 
 		$this->database_handler = new HMC_Database();
+
+
 	}
 
-	/**
-	 * Load frontend CSS.
-	 */
-	private function enqueue_styles() {
-		wp_register_style( __PNAMESPANE__ . '-frontend', esc_url( $this->assets_url ) . 'css/frontend.css', array(), $this->_version );
+	public function enqueue_styles(  ){
+		wp_register_style( $this->plugin_slug . '-admin-styles', plugins_url( 'assets/css/admin.css', __HMC_FILE__ ), array(), $this->version );
+		wp_register_style( $this->plugin_slug . '-fullcalendar-style', plugins_url( 'lib/fullcalendar/dist/fullcalendar.min.css', __HMC_FILE__ ), array(), $this->version );
+		wp_register_style( $this->plugin_slug . '-fullcalendar-style-2', plugins_url( 'lib/fullcalendar/dist/fullcalendar.print.css', __HMC_FILE__ ), array( $this->plugin_slug . '-fullcalendar-style' ), $this->version, 'print' );
+		wp_register_style( $this->plugin_slug . '-jquery-dialog', plugins_url( 'lib/fullcalendar/dist/fullcalendar.print.css', __HMC_FILE__ ), array( $this->plugin_slug . '-fullcalendar-style' ), $this->version, 'print' );
+
+	}
+
+	public function enqueue_scripts(){
+
+		wp_register_script( $this->plugin_slug . '-admin-base-script', plugins_url( 'assets/js/admin/base_admin.js', __HMC_FILE__ ), array(
+			'jquery',
+			'backbone',
+			'underscore'
+		), $this->version );
+
+
+		wp_register_script( $this->plugin_slug . '-admin-views-counts-script', plugins_url( 'assets/js/admin/views/page_count_view.js', __HMC_FILE__ ), array(
+			$this->plugin_slug . '-admin-base-script',
+			$this->plugin_slug . '-admin-model-counts-script'
+		), $this->version );
+
+
+		wp_register_script( $this->plugin_slug . '-moment-script', plugins_url( 'lib/moment/min/moment-with-locales.min.js', __HMC_FILE__ ), array(), $this->version );
+		wp_register_script( $this->plugin_slug . '-fullcalendar-script', plugins_url( 'lib/fullcalendar/dist/fullcalendar.min.js', __HMC_FILE__ ), array(
+			'jquery',
+			$this->plugin_slug . '-moment-script'
+		), $this->version );
+
+		wp_register_script( $this->plugin_slug . '-admin-model-counts-script', plugins_url( 'assets/js/admin/models/counts.js', __HMC_FILE__ ), array( $this->plugin_slug . '-admin-base-script' ), $this->version );
+		wp_register_script( $this->plugin_slug . '-admin-views-report-script', plugins_url( 'assets/js/admin/views/page_report_view.js', __HMC_FILE__ ), array(
+			$this->plugin_slug . '-fullcalendar-script',
+			$this->plugin_slug . '-admin-base-script',
+			$this->plugin_slug . '-admin-model-counts-script',
+			'jquery-ui-dialog',
+			'jquery-ui-autocomplete'
+		), $this->version );
+
+	}
+
+	public function apply_styles(){
+		if ( ! $this->add_script_to_page )
+			return;
+
+		wp_enqueue_style( 'wp-jquery-ui-dialog' );
+		wp_enqueue_style( $this->plugin_slug . '-fullcalendar-style' );
+		wp_enqueue_style( $this->plugin_slug . '-admin-styles' );
+
 		wp_enqueue_style( __PNAMESPANE__ . '-frontend' );
 	}
 
-	/**
-	 * Load frontend Javascript.
-	 */
-	private function enqueue_scripts() {
-		wp_register_script( __PNAMESPANE__ . '-frontend', esc_url( $this->assets_url ) . 'js/frontend' . $this->script_suffix . '.js', array( 'jquery' ), $this->_version );
-		wp_enqueue_script( __PNAMESPANE__ . '-frontend' );
+	public function apply_scripts(){
+
+		if ( ! $this->add_script_to_page ){
+			return;
+		}
+
+
+		wp_enqueue_script( $this->plugin_slug . '-admin-base-script' );
+		wp_enqueue_script( $this->plugin_slug . '-moment-script' );
+		wp_enqueue_script( $this->plugin_slug . '-fullcalendar-script' );
+		wp_enqueue_script( $this->plugin_slug . '-admin-model-counts-script' );
+		wp_enqueue_script( $this->plugin_slug . '-admin-views-report-script' );
+
+		//wp_enqueue_script( __PNAMESPANE__ . '-frontend' );
 	}
+
+
 
 	/**
 	 * Load plugin localisation
@@ -206,7 +276,7 @@ class Home_Money_Control {
 	public function on_activation() {
 		$this->database_handler->create();
 		$this->database_handler->fill();
-		update_option( __PNAMESPANE__ . '_version', $this->_version );
+		update_option( __PNAMESPANE__ . '_version', $this->version );
 	}
 
 	/**
@@ -227,16 +297,25 @@ class Home_Money_Control {
 	 * Cloning is forbidden.
 	 */
 	public function __clone() {
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?' ), $this->_version );
+		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?' ), $this->version );
 	}
 
 	/**
 	 * Unserializing instances of this class is forbidden.
 	 */
 	public function __wakeup() {
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?' ), $this->_version );
+		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?' ), $this->version );
 	}
 
+	public function manage_short_code( $atts ) {
+		if ( is_user_logged_in() ) {
+			$this->add_script_to_page = true;
+			$current_user = wp_get_current_user();
+			return file_get_contents( __HMC_PATH__ . 'admin/views/reports.inc.php' );
+		} else {
+			return wp_login_form( array('echo' => false ,'redirect' => get_permalink()) );
+		}
+	}
 
 	/**
 	 *
@@ -245,8 +324,6 @@ class Home_Money_Control {
 		add_action( 'init', array( $this, 'load_localisation' ), 0 );
 		$restApiCategory = new HMC_RestAPI_Category($this->database_handler->get_category_entity());
 		$restApiTransaction = new HMC_RestAPI_Transaction($this->database_handler->get_category_entity(), $this->database_handler->get_transaction_entity() );
-
-
 	}
 
 }

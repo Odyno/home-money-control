@@ -78,10 +78,10 @@ jQuery(document).ready(function ($) {
                 this.$('#hmc_count_id').val(category['id']);
                 this.$('#hmc_count').val(category['name']);
             }else{
-                this.$("#hmc_value").val("0.0");
+                this.$("#hmc_value").val("15.0");
                 this.$("#hmc_description").val("");
                 this.$('#hmc_count_id').val("0");
-                this.$('#hmc_count').val("Select me");
+                this.$('#hmc_count').val("");
             }
         },
 

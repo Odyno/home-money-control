@@ -53,12 +53,24 @@ if ( ! class_exists( 'HMC_Category' ) ) {
 			}
 		}
 
+
+		static function GET_DB() {
+			global $wpdb;
+
+			return $wpdb->get_results( "select * from " . $wpdb->prefix . self::TABLE_NAME, ARRAY_A );
+		}
+
+
 		static function FILL_DB() {
 
 			$lines = file( __HMC_PATH__ . "assets/db/HMC_CATEGORY.DF" );
+			self::FILL_DB_LINE( $lines );
+		}
+
+		static function FILL_DB_LINE( $lines ) {
 			foreach ( $lines as $line ) {
 				$keydata = explode( ";", $line );
-				self::ADD_DB( HMC_Voice::make_it( $keydata[0], $keydata[2], $keydata[3] ) );
+				self::ADD_DB( HMC_Voice::make_it( $keydata[3], $keydata[1], $keydata[2], $keydata[0] ) );
 			}
 		}
 

@@ -135,19 +135,18 @@ header .align-right {
   font-weight: bold;
 }
 .count_type {
-  display: inline-block;
-  box-sizing: content-box;
+  display: block;
   padding: 3px;
   border-radius: 3px;
   font: normal 9px / normal serif #fff;
-  text-overflow: ellipsis !important;
+  text-overflow: ellipsis;
   text-align: center;
 }
 .count_type.type_0 {
   background: green;
 }
 .count_type.type_0:before {
-  content: "Essenziale";
+  content: "Essenziali";
   color: #fff;
 }
 .count_type.type_1 {
@@ -158,28 +157,28 @@ header .align-right {
   color: #fff;
 }
 .count_type.type_2 {
-  background: red;
+  background: orange;
 }
 .count_type.type_2:before {
   content: "Hobbies e tempo libero";
   color: #fff;
 }
 .count_type.type_3 {
-  background: orange;
+  background: red;
 }
 .count_type.type_3:before {
   content: "Imprevisti extra";
   color: #fff;
 }
 .count_type.type_4 {
-  background: blue;
+  background: green;
 }
 .count_type.type_4:before {
   content: "Entrate";
   color: #fff;
 }
 .count_type.type_5 {
-  background: green;
+  background: blue;
 }
 .count_type.type_5:before {
   content: "Uscite fisse";

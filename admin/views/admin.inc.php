@@ -22,10 +22,48 @@
  * Date: 22/08/16
  * Time: 08:49
  */
+
+
+$result="";
+
+if ( ! empty($_GET["action"]) && $_GET["action"] == "show" ){
+	$result_rst=HMC_Category::GET_DB();
+	foreach ($result_rst as $item){
+		$result .= PHP_EOL . implode(";",$item);
+	}
+}
+
+
+if ( ! empty($_GET["action"]) && $_GET["action"] == "upload" ){
+	$data=$_POST["csv"];
+    $line=explode(PHP_EOL,$data);
+	HMC_Category::FILL_DB_LINE($line);
+}
+if ( ! empty($_GET["action"]) && $_GET["action"] == "new" ){
+	HMC_Category::FILL_DB();
+}
+
 ?>
 <div class="wrap">
 
 	<h2><?php echo esc_html( get_admin_page_title() ); ?></h2>
 
 
+	<a href="?page=HMC&action=show"> View It </a>
+	<textarea name="export" rows="20"  class="large-text"><?php echo $result; ?></textarea>
+	 
+	
+	
+	<form action="?page=HMC&action=upload" method="post" >
+		<textarea name="csv" rows="20"  class="large-text"></textarea>
+		<input type="submit" value="Upload">
+	</form>
+
 </div>
+
+
+<?php
+
+
+
+
