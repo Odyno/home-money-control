@@ -51,9 +51,10 @@ jQuery(document).ready(function ($) {
 
             data_result.items.forEach(function (entry) {
                 if (entry.type != HMC.COUNT_TYPE.ENTRATE.id ){
-                    labels.push(entry.name);
+                    console.log("bb");
+                    labels.push(HMC.COUNT_TYPE.getLabel(entry.type));
                     data.push(entry.total);
-                    backgroundColor.push(HMC.COUNT_TYPE.USCITE_FISSE.color);
+                    backgroundColor.push(HMC.COUNT_TYPE.getColor(entry.type));
                     uscite += parseFloat(entry.total);
                 }else{
                     entrate += parseFloat(entry.total);
@@ -68,7 +69,7 @@ jQuery(document).ready(function ($) {
                 labels: labels,
                 datasets: [{data: data, backgroundColor: backgroundColor}]
             }
-            this.title = this.count_name + " € " + data_result.total;
+            this.title = "Summary";
         },
 
         render: function () {
@@ -76,7 +77,8 @@ jQuery(document).ready(function ($) {
                 responsive: true,
                 padding: 2,
                 legend: {
-                    display: false
+                    display: false,
+                    position: 'right'
                 },
                 title: {
                     display: true,
@@ -86,7 +88,7 @@ jQuery(document).ready(function ($) {
 
             var ctx = document.getElementById(this.elementId).getContext("2d");
             this.iChart = new Chart(ctx, {
-                type: 'doughnut',
+                type: 'pie',
                 data: this.dataset,
                 options: private_options
             });
@@ -392,7 +394,6 @@ jQuery(document).ready(function ($) {
 
         _format_object: function (obj) {
             var ref;
-            console.log("aaaa")
             if (!((typeof obj !== "undefined" && obj !== null ? (ref = obj.category) != null ? ref.name : void 0 : void 0) != null)) {
                 return false;
             }

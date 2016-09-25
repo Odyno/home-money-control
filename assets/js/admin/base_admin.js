@@ -47,6 +47,38 @@ HMC.COUNT_TYPE = {
         id: 5,
         label: "Uscite",
         color: "#0000FF"
+    },
+    getColor: function (id) {
+        console.log("aa");
+        if (this.SOPRAVVIVENZA.id == id) {
+            return this.SOPRAVVIVENZA.color;
+        }else if (this.SERVIZI_OPTIONAL.id == id) {
+            return this.SERVIZI_OPTIONAL.color;
+        }else if (this.HOBBIES_TEMPO_LIBERO.id == id) {
+            return this.HOBBIES_TEMPO_LIBERO.color;
+        }else if (this.IMPREVISTI_EXTRA.id == id) {
+            return this.IMPREVISTI_EXTRA.color;
+        }else if (this.ENTRATE.id == id) {
+            return this.ENTRATE.color;
+        }else if (this.USCITE_FISSE.id == id) {
+            return this.USCITE_FISSE.color;
+        }
+    },
+    getLabel: function (id) {
+        if (this.SOPRAVVIVENZA.id == id) {
+            return this.SOPRAVVIVENZA.label;
+        }else if (this.SERVIZI_OPTIONAL.id == id) {
+            return this.SERVIZI_OPTIONAL.label;
+        }else if (this.HOBBIES_TEMPO_LIBERO.id == id) {
+            return this.HOBBIES_TEMPO_LIBERO.label;
+        }else if (this.IMPREVISTI_EXTRA.id == id) {
+            return this.IMPREVISTI_EXTRA.label;
+        }else if (this.ENTRATE.id == id) {
+            return this.ENTRATE.label;
+        }else if (this.USCITE_FISSE.id == id) {
+            return this.USCITE_FISSE.label;
+        }
     }
+
 
 };
