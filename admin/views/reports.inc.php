@@ -26,51 +26,62 @@
 <div class="wrap">
 	<!-- <h2><?php echo esc_html( get_admin_page_title() ); ?></h2> -->
 
-
 	<div class="welcome-panel">
 		<div class="welcome-panel-content">
 			<h2>Statistiche</h2>
-			<div class="welcome-panel-column-container">
-				<div class="welcome-panel-column">
-					<h3>Dettaglio Spese</h3>
 					<div class="hmc_stats">
 						<lu>
 							<li>
-								<canvas id="cat_type_0" width="100px" height="100px"></canvas>
+								<canvas id="cat_type_0"></canvas>
 							</li>
 							<li>
-								<canvas id="cat_type_1" width="100px" height="100px"></canvas>
+								<canvas id="cat_type_1"></canvas>
 							</li>
 							<li>
-								<canvas id="cat_type_2" width="100px" height="100px"></canvas>
+								<canvas id="cat_type_2"></canvas>
 							</li>
 							<li>
-								<canvas id="cat_type_3" width="100px" height="100px"></canvas>
+								<canvas id="cat_type_3"></canvas>
+							</li>
+							<li>
+								<canvas id="mouth_stat" style="border-left: 1px solid gray"></canvas>
 							</li>
 						</lu>
 					</div>
-				</div>
-				<div class="welcome-panel-column">
-					<h3>Andamenti</h3>
-					<div class="hmc_stats">
-						<lu>
-							<li>
-								<canvas id="mouth_stat" style="border-left: 1px solid gray; padding-left: 5px;"
-								        width="100px" height="100px"></canvas>
-							</li>
-						</lu>
-					</div>
-				</div>
-			</div>
 		</div>
 	</div>
 
 	<div class="welcome-panel">
 		<div class="welcome-panel-content">
-			<h2>Registrazioni</h2>
+			<h2>Spese Variabili</h2>
 			<p>Qui puoi osservare ed aggiungere le tue registrazioni organizzate per settimana o per mese. E'
 				possibile aggiungere una nuova voce di spesa facendo click sulla colonna desiderata</p>
 			<div id='hmc_calendar'></div>
+			<p><a class="button-primary" >Aggiungi</a></p>
+		</div>
+	</div>
+
+	<div class="welcome-panel">
+		<div class="welcome-panel-content">
+			<h2>Entrate ed Uscire Fisse</h2>
+			<p>Qui puoi osservare ed aggiungere le tue spese ed entrate previste</p>
+			<!-- The empty table we'll use as the example -->
+			<table class="widefat">
+				<thead>
+				<tr >
+					<th class="row-title" >Gruppo</th>
+					<th class="row-title">Descrizione</th>
+					<th class="row-title">Valore</th>
+					<th class="row-title">Data Prevista</th>
+				</tr>
+				</thead>
+				<!-- We'll attach the PeopleView to this element -->
+				<tbody id="hmc_count_table" >
+				  <tr><td cellspan="4">None!</td></tr>
+				</tbody>
+			</table>
+
+		<p><a class="button-primary" >Aggiungi</a></p>
 		</div>
 	</div>
 

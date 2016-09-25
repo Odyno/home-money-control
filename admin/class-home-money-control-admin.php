@@ -185,7 +185,7 @@ class Home_Money_Control_Admin {
 		add_submenu_page(
 			$this->plugin_slug . '-id-root-menu',
 			__( 'Home Money Control - Reports page', $this->plugin_slug ),
-			__( 'Reports', $this->plugin_slug ),
+			__( 'Mese attuale', $this->plugin_slug ),
 			'edit_posts',
 			$this->plugin_slug . '-id-menu-reports-list',
 			array( $this, 'display_reports_page' )
@@ -207,7 +207,7 @@ class Home_Money_Control_Admin {
 		add_submenu_page(
 			$this->plugin_slug . '-id-root-menu',
 			__( 'Home Money Control - Piano dei Conti', $this->plugin_slug ),
-			__( 'Piano dei Conti', $this->plugin_slug ),
+			__( 'Piano dei conti', $this->plugin_slug ),
 			'edit_posts',
 			$this->plugin_slug . '-id-menu-counts',
 			array( $this, 'display_counts_page' )

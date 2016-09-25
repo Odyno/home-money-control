@@ -184,10 +184,9 @@ header .align-right {
   content: "Uscite fisse";
   color: #fff;
 }
-.hmc_stats ul {
-  overflow: visible;
-}
 .hmc_stats li {
   display: inline-block;
-  overflow: visible;
+}
+.hmc_stats li canvas {
+  max-width: 200px;
 }

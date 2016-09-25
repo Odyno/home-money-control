@@ -116,7 +116,31 @@ if ( ! class_exists( 'HMC_RestAPI_Transaction' ) ) {
 		 * @return WP_Error|WP_REST_Response
 		 */
 		public function get_items( $request ) {
-			$items = $this->transaction_handler->get();
+			//print_r($request);
+
+			$where=array();
+
+			if ( isset( $request->get_params()['from']) ){
+				$from = $request->get_params()['from'];
+			}else{
+				$from = date( "Y-m", time() ) . "-01";
+			}
+
+			if ( isset($request->get_params()['to']) ){
+				$to = $request->get_params()['to'];
+			}else{
+				$to = date( "Y-m-t", time() );
+			}
+
+			array_push($where, ' trans.value_date BETWEEN "'.$from.'" AND "'.$to.'"');
+
+			if ( isset($request->get_params()['type']) ){
+				$items = $request->get_params()['type'];
+				array_push($where, ' cnt.type in ('.$items.')');
+			}
+
+
+			$items = $this->transaction_handler->get($where);
 			$data  = array();
 			foreach ( $items as $item ) {
 				$itemdata = $this->prepare_item_for_response( $item, $request );

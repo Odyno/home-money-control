@@ -17,9 +17,6 @@
 
 jQuery(document).ready(function ($) {
 
-
-
-
     HMC.Views.SummPieChart =  Backbone.View.extend({
 
         elementId: null,
@@ -53,7 +50,6 @@ jQuery(document).ready(function ($) {
             var backgroundColor = new Array();
 
             data_result.items.forEach(function (entry) {
-                console.log(entry.type);
                 if (entry.type != HMC.COUNT_TYPE.ENTRATE.id ){
                     labels.push(entry.name);
                     data.push(entry.total);
@@ -74,9 +70,10 @@ jQuery(document).ready(function ($) {
             }
             this.title = this.count_name + " € " + data_result.total;
         },
+
         render: function () {
             var private_options = {
-                responsive: false,
+                responsive: true,
                 padding: 2,
                 legend: {
                     display: false
@@ -96,7 +93,6 @@ jQuery(document).ready(function ($) {
             this;
         }
     });
-
 
     HMC.Views.PieChart = Backbone.View.extend({
 
@@ -163,7 +159,7 @@ jQuery(document).ready(function ($) {
 
         render: function () {
             var private_options = {
-                responsive: false,
+                responsive: true,
                 padding: 2,
                 legend: {
                     display: false
@@ -183,38 +179,6 @@ jQuery(document).ready(function ($) {
             this;
         }
     });
-
-
-    var type_0 = new HMC.Views.PieChart({
-        id: 'cat_type_0',
-        name: HMC.COUNT_TYPE.HOBBIES_TEMPO_LIBERO.label,
-        type_id: HMC.COUNT_TYPE.HOBBIES_TEMPO_LIBERO.id,
-        color: HMC.COUNT_TYPE.HOBBIES_TEMPO_LIBERO.color
-    });
-    var type_1 = new HMC.Views.PieChart({
-        id: 'cat_type_1',
-        name: HMC.COUNT_TYPE.IMPREVISTI_EXTRA.label,
-        type_id: HMC.COUNT_TYPE.IMPREVISTI_EXTRA.id,
-        color: HMC.COUNT_TYPE.IMPREVISTI_EXTRA.color
-    });
-    var type_2 = new HMC.Views.PieChart({
-        id: 'cat_type_2',
-        name: HMC.COUNT_TYPE.SERVIZI_OPTIONAL.label,
-        type_id: HMC.COUNT_TYPE.SERVIZI_OPTIONAL.id,
-        color: HMC.COUNT_TYPE.SERVIZI_OPTIONAL.color
-    });
-    var type_3 = new HMC.Views.PieChart({
-        id: 'cat_type_3',
-        name: HMC.COUNT_TYPE.SOPRAVVIVENZA.label,
-        type_id: HMC.COUNT_TYPE.SOPRAVVIVENZA.id,
-        color: HMC.COUNT_TYPE.SOPRAVVIVENZA.color
-    });
-
-    var sum= new HMC.Views.SummPieChart({
-        id: 'mouth_stat',
-        name: 'statistic'
-    });
-
 
     HMC.Views.ReportView = Backbone.View.extend({
 
@@ -246,12 +210,10 @@ jQuery(document).ready(function ($) {
             $("#hmc_count").autocomplete({
                 source: "/wp-json/hmc/v1/voices",
                 focus: function (event, ui) {
-                    console.log("focus");
                     $("#hmc_count").val(ui.item.name);
                     return false;
                 },
                 select: function (event, ui) {
-                    console.log("select");
                     $("#hmc_count").val(ui.item.name);
                     $("#hmc_count_id").val(ui.item.id);
                     $("#hmc_count_description").html(ui.item.description);
@@ -267,7 +229,6 @@ jQuery(document).ready(function ($) {
         },
 
         _processing: function (isInProgress) {
-            console.log("aa");
             if (isInProgress) {
                 this.$("#hmc-processing").show();
             } else {
@@ -348,7 +309,6 @@ jQuery(document).ready(function ($) {
         initialize: function () {
             this.collection = new HMC.Models.Reports();
 
-
             _.bindAll(this, 'render', 'select', '_addOne', '_addAll', 'eventClick', '_fetch_events');
 
             this.listenTo(this.collection, 'reset', this._addAll);
@@ -384,7 +344,12 @@ jQuery(document).ready(function ($) {
         },
 
         _fetch_events: function (iStart, iEnd, iTimezone, callback) {
-            this.collection.fetch({reset: true});
+            var obj={
+                from: iStart.format("YYYY-MM-DD HH:mm:ss"),
+                to: iEnd.format("YYYY-MM-DD HH:mm:ss"),
+                type: '0,1,2,3'
+            };
+            this.collection.fetch({reset: true , data: $.param(obj)});
         },
 
         eventClick: function (fcEvent) {
@@ -404,28 +369,33 @@ jQuery(document).ready(function ($) {
         },
 
         _addAll: function () {
-            console.log("addAll");
 
             var objs = this.collection.toJSON();
 
             objs.forEach(function (_this) {
                 return function (obj) {
-                    _this._format_object(obj);
-                    _this.$el.fullCalendar('renderEvent', obj);
+                    if (_this._format_object(obj)){
+                      _this.$el.fullCalendar('renderEvent', obj);
+                    }
                 };
             }(this));
 
         },
 
         _addOne: function (model) {
-            console.log("addOne");
 
             var obj = model.toJSON();
-            this._format_object(obj);
+            if (this._format_object(obj)){
             this.$el.fullCalendar('renderEvent', obj);
+            }
         },
 
         _format_object: function (obj) {
+            var ref;
+            console.log("aaaa")
+            if (!((typeof obj !== "undefined" && obj !== null ? (ref = obj.category) != null ? ref.name : void 0 : void 0) != null)) {
+                return false;
+            }
             obj["title"] = obj.value + " € " + obj.category.name;
             obj["start"] = obj.value_date;
             obj["allDay"] = true;
@@ -437,10 +407,10 @@ jQuery(document).ready(function ($) {
 
             var obj = this.$el.fullCalendar('clientEvents', event.get('id'))[0];
 
-            this._format_object(obj);
-
-            this.$el.fullCalendar('updateEvent', obj);
-            this.$el.fullCalendar('refetchEvents');
+            if (this._format_object(obj)){
+                this.$el.fullCalendar('updateEvent', obj);
+                this.$el.fullCalendar('refetchEvents');
+            }
         },
 
         _destroy: function (event) {
@@ -452,7 +422,113 @@ jQuery(document).ready(function ($) {
 
     });
 
+    HMC.Views.TableField = Backbone.View.extend({
+        // Each person will be shown as a table row
+        tagName: 'tr',
+
+        initialize: function(options) {
+            // Ensure our methods keep the `this` reference to the view itself
+            _.bindAll(this, 'render');
+
+            // If the model changes we need to re-render
+            this.model.bind('change', this.render);
+        },
+
+        render: function() {
+            // Clear existing row data if needed
+            jQuery(this.el).empty();
+
+            this.$el.addClass("type_"+this.model.get('category')['type']);
+            // Write the table columns
+            jQuery(this.el).append(jQuery('<td>' + this.model.get('category')['name'] + '</td>'));
+            jQuery(this.el).append(jQuery('<td>' + this.model.get('description') + '</td>'));
+            jQuery(this.el).append(jQuery('<td>' + this.model.get('value') + '</td>'));
+            jQuery(this.el).append(jQuery('<td>' + moment( this.model.get('value_date')).fromNow() + '</td>'));
+
+            return this;
+        }
+    });
+
+
+
+    HMC.Views.Table = Backbone.View.extend({
+        // The collection will be kept here
+        collection: null,
+
+        el:$("#hmc_count_table"),
+
+        initialize: function(options) {
+            this.collection = new HMC.Models.Reports();
+
+            // Ensure our methods keep the `this` reference to the view itself
+            _.bindAll(this, 'render');
+
+            // Bind collection changes to re-rendering
+            this.collection.bind('reset', this.render);
+            this.collection.bind('add', this.render);
+            this.collection.bind('remove', this.render);
+            var obj={
+                type: '4,5'
+            };
+            this.collection.fetch({reset: true , data: $.param(obj)});
+        },
+
+        render: function() {
+            console.log("AAAA");
+            var element = this.$el;
+            // Clear potential old entries first
+            element.empty();
+
+            // Go through the collection items
+            this.collection.forEach(function(item) {
+
+                // Instantiate a PeopleItem view for each
+                var itemView = new HMC.Views.TableField({
+                    model: item
+                });
+
+                // Render the PeopleView, and append its element
+                // to the table
+                element.append(itemView.render().el);
+            });
+
+            return this;
+        }
+    });;
+
+
+    var countModels= new HMC.Models.Reports();
+
     var page = new HMC.Views.Calendar().render();
+    var type_0 = new HMC.Views.PieChart({
+        id: 'cat_type_0',
+        name: HMC.COUNT_TYPE.HOBBIES_TEMPO_LIBERO.label,
+        type_id: HMC.COUNT_TYPE.HOBBIES_TEMPO_LIBERO.id,
+        color: HMC.COUNT_TYPE.HOBBIES_TEMPO_LIBERO.color
+    });
+    var type_1 = new HMC.Views.PieChart({
+        id: 'cat_type_1',
+        name: HMC.COUNT_TYPE.IMPREVISTI_EXTRA.label,
+        type_id: HMC.COUNT_TYPE.IMPREVISTI_EXTRA.id,
+        color: HMC.COUNT_TYPE.IMPREVISTI_EXTRA.color
+    });
+    var type_2 = new HMC.Views.PieChart({
+        id: 'cat_type_2',
+        name: HMC.COUNT_TYPE.SERVIZI_OPTIONAL.label,
+        type_id: HMC.COUNT_TYPE.SERVIZI_OPTIONAL.id,
+        color: HMC.COUNT_TYPE.SERVIZI_OPTIONAL.color
+    });
+    var type_3 = new HMC.Views.PieChart({
+        id: 'cat_type_3',
+        name: HMC.COUNT_TYPE.SOPRAVVIVENZA.label,
+        type_id: HMC.COUNT_TYPE.SOPRAVVIVENZA.id,
+        color: HMC.COUNT_TYPE.SOPRAVVIVENZA.color
+    });
+    var sum= new HMC.Views.SummPieChart({
+        id: 'mouth_stat',
+        name: 'statistic'
+    });
+    var table = new HMC.Views.Table();
 
 
 });

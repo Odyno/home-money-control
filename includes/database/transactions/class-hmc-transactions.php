@@ -174,7 +174,7 @@ if ( ! class_exists( 'HMC_Transactions' ) ) {
 			$where_condition = " WHERE cnt.id = trans.category_id ";
 			if ( count( $where ) > 0 ) {
 				foreach ( $where as $condition ) {
-					$where_condition .= " AND " . 'trans.' . $condition . " ";
+					$where_condition .= " AND " . $condition . " ";
 				}
 			}
 
@@ -189,6 +189,7 @@ if ( ! class_exists( 'HMC_Transactions' ) ) {
                 trans.*
             FROM " . $table_name . ' as trans, ' . $table_count . ' as cnt  ' . $where_condition . ' ORDER BY trans.' . $order_by . ' ' . $order;
 
+			//echo $select;
 			$transazioni = $wpdb->get_results( $select, ARRAY_A );
 
 
