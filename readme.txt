@@ -4,7 +4,7 @@ Donate link: http://www.staniscia.net/donate
 Tags: finace, plugin, template
 Requires at least: 3.9
 Tested up to: 4.0
-Stable tag: 1.0
+Stable tag: 1.1
 License: GPLv2 or later
 License URI: http://\www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,8 +30,8 @@ This plugin template is designed to help you get started with any new WordPress 
 
 == Changelog ==
 
-= 1.0 =
-* Initial release
+= 1.1 =
+* Statitics
 
 == Upgrade Notice ==
 
