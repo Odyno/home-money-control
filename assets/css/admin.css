@@ -103,7 +103,7 @@ header .align-right {
 }
 #countview #main #count-list .apply:hover {
   background-position: 0 -20px;
-  color: green;
+  color: #008000;
 }
 #countview #main #count-list .destroy {
   position: absolute;
@@ -143,44 +143,51 @@ header .align-right {
   text-align: center;
 }
 .count_type.type_0 {
-  background: green;
+  background: #298048;
 }
 .count_type.type_0:before {
   content: "Essenziali";
   color: #fff;
 }
 .count_type.type_1 {
-  background: lightblue;
+  background: #add8e6;
 }
 .count_type.type_1:before {
   content: "Servizi optional";
   color: #fff;
 }
 .count_type.type_2 {
-  background: orange;
+  background: #ffa500;
 }
 .count_type.type_2:before {
   content: "Hobbies e tempo libero";
   color: #fff;
 }
 .count_type.type_3 {
-  background: red;
+  background: #ff0000;
 }
 .count_type.type_3:before {
   content: "Imprevisti extra";
   color: #fff;
 }
 .count_type.type_4 {
-  background: green;
+  background: #008000;
 }
 .count_type.type_4:before {
   content: "Entrate";
   color: #fff;
 }
 .count_type.type_5 {
-  background: blue;
+  background: #0000ff;
 }
 .count_type.type_5:before {
   content: "Uscite fisse";
   color: #fff;
+}
+.hmc_stats ul {
+  overflow: visible;
+}
+.hmc_stats li {
+  display: inline-block;
+  overflow: visible;
 }

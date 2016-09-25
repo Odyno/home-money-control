@@ -25,6 +25,7 @@ if ( ! class_exists( 'HMC_Database' ) ) {
 
 		private $category_entity;
 		private $transaction_entity;
+		private $statistics_entity;
 
 		/**
 		 * HMC_Database constructor.
@@ -39,6 +40,7 @@ if ( ! class_exists( 'HMC_Database' ) ) {
 		 *  Load the dependency
 		 */
 		public function load_dependencies() {
+			require_once( __HMC_PATH__ . 'includes/database/stats/class-hmc-statistics.php' );
 			require_once( __HMC_PATH__ . 'includes/database/category/class-hmc-voice-type.php' );
 			require_once( __HMC_PATH__ . 'includes/database/category/class-hmc-voice.php' );
 			require_once( __HMC_PATH__ . 'includes/database/category/class-hmc-category.php' );
@@ -57,7 +59,12 @@ if ( ! class_exists( 'HMC_Database' ) ) {
 				$this->transaction_entity = new HMC_Transactions();
 			return $this->transaction_entity ;
 		}
-		
+
+		public function get_statistics_entity() {
+			if ( null === $this->statistics_entity )
+				$this->statistics_entity = new HMC_Statistics();
+			return $this->statistics_entity ;
+		}
 
 		/**
 		 * Build the database.

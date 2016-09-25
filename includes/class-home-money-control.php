@@ -169,6 +169,7 @@ class Home_Money_Control {
 		require_once $this->dir_path.'includes/database/class-hmc-database.php';
 		require_once $this->dir_path.'includes/api/class-hmc-restapi-category.php';
 		require_once $this->dir_path.'includes/api/class-hmc-restapi-transaction.php';
+		require_once $this->dir_path.'includes/api/class-hmc-restapi-stats.php';
 
 
 		require_once( $this->dir_path.'admin/class-home-money-control-admin.php' );
@@ -206,6 +207,9 @@ class Home_Money_Control {
 
 
 		wp_register_script( $this->plugin_slug . '-moment-script', plugins_url( 'lib/moment/min/moment-with-locales.min.js', __HMC_FILE__ ), array(), $this->version );
+
+		wp_register_script( $this->plugin_slug . '-chartjs', plugins_url( 'lib/chart.js/dist/Chart.min.js', __HMC_FILE__ ), array(), $this->version );
+
 		wp_register_script( $this->plugin_slug . '-fullcalendar-script', plugins_url( 'lib/fullcalendar/dist/fullcalendar.min.js', __HMC_FILE__ ), array(
 			'jquery',
 			$this->plugin_slug . '-moment-script'
@@ -324,6 +328,8 @@ class Home_Money_Control {
 		add_action( 'init', array( $this, 'load_localisation' ), 0 );
 		$restApiCategory = new HMC_RestAPI_Category($this->database_handler->get_category_entity());
 		$restApiTransaction = new HMC_RestAPI_Transaction($this->database_handler->get_category_entity(), $this->database_handler->get_transaction_entity() );
+		$restApiStats = new HMC_RestAPI_Stats($this->database_handler->get_statistics_entity());
+
 	}
 
 }

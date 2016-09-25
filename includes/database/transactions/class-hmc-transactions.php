@@ -14,19 +14,52 @@ if ( ! class_exists( 'HMC_Transactions' ) ) {
 	 * @author astaniscia
 	 */
 	class HMC_Transactions {
-		const TABLE_VERSION_KEY = "HMC_TRANS_DB_VERSION";
-		const TABLE_VERSION = "0.0.3";
-		const TABLE_NAME = "HMC_TRANS";
+		/**
+		 *
+		 */
+		const TABLE_VERSION_KEY = 'HMC_TRANS_DB_VERSION';
+		/**
+		 *
+		 */
+		const TABLE_VERSION = '0.0.3';
+		/**
+		 *
+		 */
+		const TABLE_NAME = 'HMC_TRANS';
 
-		const COL_ID = "id";
-		const COL_POSTING_DATE = "posting_date";
-		const COL_VALUE_DATE = "value_date";
-		const COL_VALUE = "value";
-		const COL_CATEGORY_ID = "category_id";
-		const COL_DESCRIPTION = "description";
-		const COL_OWNER_ID = "user_id";
+		/**
+		 *
+		 */
+		const COL_ID = 'id';
+		/**
+		 *
+		 */
+		const COL_POSTING_DATE = 'posting_date';
+		/**
+		 *
+		 */
+		const COL_VALUE_DATE = 'value_date';
+		/**
+		 *
+		 */
+		const COL_VALUE = 'value';
+		/**
+		 *
+		 */
+		const COL_CATEGORY_ID = 'category_id';
+		/**
+		 *
+		 */
+		const COL_DESCRIPTION = 'description';
+		/**
+		 *
+		 */
+		const COL_OWNER_ID = 'user_id';
 
 
+		/**
+		 *
+		 */
 		static function DROP_DB() {
 			global $wpdb;
 			$tableName = $wpdb->prefix . self::TABLE_NAME;

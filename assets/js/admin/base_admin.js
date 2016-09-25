@@ -15,3 +15,38 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 var HMC = {Models: {}, Views: {}, App: null};
+
+HMC.COUNT_TYPE = {
+
+    SOPRAVVIVENZA: {
+        id: 0,
+        label: "Sopravvivenza",
+        color: "#298048"
+    },
+    SERVIZI_OPTIONAL: {
+        id: 1,
+        label: "Optional",
+        color: "#ADD8E6"
+    },
+    HOBBIES_TEMPO_LIBERO: {
+        id: 2,
+        label: "Hobbies",
+        color: "#FFA500"
+    },
+    IMPREVISTI_EXTRA: {
+        id: 3,
+        label: "Imprevisti",
+        color: "#FF0000"
+    },
+    ENTRATE: {
+        id: 4,
+        label: "Entrate",
+        color: "#008000"
+    },
+    USCITE_FISSE: {
+        id: 5,
+        label: "Uscite",
+        color: "#0000FF"
+    }
+
+};
