@@ -208,7 +208,7 @@ class Home_Money_Control {
 
 		wp_register_script( $this->plugin_slug . '-moment-script', plugins_url( 'lib/moment/min/moment-with-locales.min.js', __HMC_FILE__ ), array(), $this->version );
 
-		wp_register_script( $this->plugin_slug . '-chartjs', plugins_url( 'lib/chart.js/dist/Chart.min.js', __HMC_FILE__ ), array(), $this->version );
+		wp_register_script( $this->plugin_slug . '-chartjs', plugins_url( 'lib/chartjs/Chart.min.js', __HMC_FILE__ ), array($this->plugin_slug . '-moment-script'), $this->version );
 
 		wp_register_script( $this->plugin_slug . '-fullcalendar-script', plugins_url( 'lib/fullcalendar/dist/fullcalendar.min.js', __HMC_FILE__ ), array(
 			'jquery',

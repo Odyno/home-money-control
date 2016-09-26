@@ -1,7 +1,7 @@
 {
-	"name": "wordpress-plugin-template",
-	"title": "WordPress Plugin Template",
-	"version": "1.0.0",
+	"name": "HMC",
+	"title": "HMC",
+	"version": "1.0.1",
 	"homepage": "https://github.com/hlashbrooke/WordPress-Plugin-Template",
 	"main": "Gruntfile.js",
 	"devDependencies": {

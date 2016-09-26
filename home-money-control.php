@@ -16,26 +16,11 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *
  *
- *
- *
- *
- * The plugin bootstrap file.
- *
- * This file is read by WordPress to generate the plugin information in the plugin
- * admin area. This file also includes all of the dependencies used by the plugin,
- * registers the activation and deactivation functions, and defines a function
- * that starts the plugin.
- *
- * @link              http://www.staniscia.net
- * @package           WordPress
- * @author            Alessandro Staniscia
- * @since             1.0.0
- *
  * @wordpress-plugin
  * Plugin Name:       Home Money Control
  * Plugin URI:        http://www.staniscia.net
- * Description:       This plugin add Rest interface for the managemen and report of your bill and profict.
- * Version:           1.0.0
+ * Description:       This plugin add to wodprdress the Rest interface for the management and report of your bill and profict and simple page to managemnt/report of it
+ * Version:           1.0.1
  * Author:            Alessandro Staniscia
  * Author URI:        http://www.staniscia.net
  * Requires at least: 4.0

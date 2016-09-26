@@ -1,18 +1,27 @@
 === Home Money Control ===
-Contributors: Alessandro Staniscia
+Plugin Name:       Home Money Control
+Plugin URI:        http://www.staniscia.net
+Description:       This plugin add to wodprdress the Rest interface for the management and report of your bill and profict and simple page to managemnt/report of it
+Version:           1.0.1
+Author:            Alessandro Staniscia
+Author URI:        http://www.staniscia.net
+Requires at least: 4.0
+Tested up to:      4.0
+License:           GPL-2.0+
+License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
+Text Domain:       home-money-control
+Domain Path:       /lang
 Donate link: http://www.staniscia.net/donate
-Tags: finace, plugin, template
-Requires at least: 3.9
-Tested up to: 4.0
-Stable tag: 1.1
-License: GPLv2 or later
-License URI: http://\www.gnu.org/licenses/gpl-2.0.html
+Tags: finance, plugin, template
 
-This plugin is a internal plugin used for the management  of Spese
 
+
+This plugin add to wodprdress the Rest interface for the management and report of your bill and profict and simple page to managemnt/report of it
 == Description ==
 
-This plugin is a internal plugin used for the management  of Spese
+This plugin add to wodprdress the Rest interface for the management and report of your bill and profict and simple page to managemnt/report of it
+
+
 
 == Installation ==
 
@@ -30,10 +39,8 @@ This plugin template is designed to help you get started with any new WordPress 
 
 == Changelog ==
 
-= 1.1 =
+= 1.0.1 =
 * Statitics
-
-== Upgrade Notice ==
 
 = 1.0 =
 * Initial release
