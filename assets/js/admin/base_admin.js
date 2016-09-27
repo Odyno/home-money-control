@@ -49,7 +49,6 @@ HMC.COUNT_TYPE = {
         color: "#0000FF"
     },
     getColor: function (id) {
-        console.log("aa");
         if (this.SOPRAVVIVENZA.id == id) {
             return this.SOPRAVVIVENZA.color;
         }else if (this.SERVIZI_OPTIONAL.id == id) {

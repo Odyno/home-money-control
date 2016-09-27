@@ -51,7 +51,6 @@ jQuery(document).ready(function ($) {
 
             data_result.items.forEach(function (entry) {
                 if (entry.type != HMC.COUNT_TYPE.ENTRATE.id ){
-                    console.log("bb");
                     labels.push(HMC.COUNT_TYPE.getLabel(entry.type));
                     data.push(entry.total);
                     backgroundColor.push(HMC.COUNT_TYPE.getColor(entry.type));
@@ -122,6 +121,7 @@ jQuery(document).ready(function ($) {
             this
         },
         parseData: function (data_result) {
+
             var labels = new Array();
             var data = new Array();
             var backgroundColor = new Array();
@@ -132,11 +132,18 @@ jQuery(document).ready(function ($) {
                 backgroundColor.push(this.change_brightness(this.color, ( 100 - (entry.total * 100) / data_result.total)));
             }, this);
 
+            if (data.length == 0){
+                labels.push('none');
+                data.push(0);
+                backgroundColor.push("#FFFFFF");
+            }
 
             this.dataset = {
                 labels: labels,
                 datasets: [{data: data, backgroundColor: backgroundColor}]
-            }
+            };
+
+            //console.log("PIPPO Type: "+this.count_type +" Nome: "+ HMC.COUNT_TYPE.getLabel(this.count_type),this.dataset);
             this.title = this.count_name + " € " + data_result.total;
         },
 
@@ -186,12 +193,12 @@ jQuery(document).ready(function ($) {
 
         el: $('#report_dialog'),
 
+
         initialize: function () {
             _.bindAll(this, 'render', '_sync_ui', '_sync_model', 'open', 'close', 'save', 'destroy');
             this.value = null;
             this.description = null;
             this.category = null;
-
         },
 
         render: function () {
@@ -297,30 +304,42 @@ jQuery(document).ready(function ($) {
             if (confirm('Are you sure you want to DELETE this Count from database?')) {
                 this.model.destroy({success: this.close});
             }
+        },
+
+        onEdit: function (model){
+            this.model = model;
+            this.render();
+        },
+
+        onNew: function(startDate, collection){
+            this.collection = collection ;
+            this.model = new HMC.Models.Report({'value_date': startDate});
+            this._sync_ui();
+            this.render();
         }
+
     });
 
     HMC.Views.Calendar = Backbone.View.extend({
 
         tag: "div",
 
+        events: {
+            "click .hmc-caledar-new-report": "onNew"
+        },
+
         // Instead of generating a new element, bind to the existing skeleton of
         // the App already present in the HTML.
         el: $("#hmc_calendar"),
 
-        initialize: function () {
+        initialize: function (options) {
             this.collection = new HMC.Models.Reports();
-
             _.bindAll(this, 'render', 'select', '_addOne', '_addAll', 'eventClick', '_fetch_events');
-
             this.listenTo(this.collection, 'reset', this._addAll);
             this.listenTo(this.collection, 'add', this._addOne);
             this.listenTo(this.collection, 'change', this._change);
             this.listenTo(this.collection, 'destroy', this._destroy);
-
             this.reportView = new HMC.Views.ReportView();
-
-
         },
 
         render: function () {
@@ -339,8 +358,8 @@ jQuery(document).ready(function ($) {
                 ignoreTimezone: false,
                 select: this.select,
                 eventClick: this.eventClick,
-                eventDrop: this.eventDropOrResize,
-                eventResize: this.eventDropOrResize,
+                //eventDrop: this.eventDropOrResize,
+                //eventResize: this.eventDropOrResize,
                 events: this._fetch_events
             });
         },
@@ -355,46 +374,45 @@ jQuery(document).ready(function ($) {
         },
 
         eventClick: function (fcEvent) {
-            this.reportView.model = this.collection.get(fcEvent.id);
-            this.reportView.render();
+            this.reportView.onEdit(this.collection.get(fcEvent.id));
         },
 
         eventDropOrResize: function (fcEvent) {
             this.collection.get(fcEvent.id).save({start: fcEvent.start, end: fcEvent.end});
         },
 
+        onNew: function(){
+            console.log("pluto");
+            this.select(moment(),null,null)
+        },
 
         select: function (startDate, endDate, allday) {
-            this.reportView.collection = this.collection;
-            this.reportView.model = new HMC.Models.Report({'value_date': startDate});
-            this.reportView.render();
+            this.reportView.onNew(startDate, this.collection);
         },
 
         _addAll: function () {
-
             var objs = this.collection.toJSON();
 
             objs.forEach(function (_this) {
                 return function (obj) {
-                    if (_this._format_object(obj)){
+                    if (_this._format_object(obj)  != false ){
                       _this.$el.fullCalendar('renderEvent', obj);
                     }
                 };
             }(this));
-
         },
 
         _addOne: function (model) {
-
             var obj = model.toJSON();
-            if (this._format_object(obj)){
-            this.$el.fullCalendar('renderEvent', obj);
+            if (this._format_object(obj) != false){
+              this.$el.fullCalendar('renderEvent', obj);
             }
         },
 
         _format_object: function (obj) {
             var ref;
             if (!((typeof obj !== "undefined" && obj !== null ? (ref = obj.category) != null ? ref.name : void 0 : void 0) != null)) {
+                console.log("scartato",obj);
                 return false;
             }
             obj["title"] = obj.value + " € " + obj.category.name;
@@ -404,22 +422,17 @@ jQuery(document).ready(function ($) {
         },
 
         _change: function (event) {
-            console.log("changeOne");
-
             var obj = this.$el.fullCalendar('clientEvents', event.get('id'))[0];
 
-            if (this._format_object(obj)){
+            if (this._format_object(obj) != false){
                 this.$el.fullCalendar('updateEvent', obj);
                 this.$el.fullCalendar('refetchEvents');
             }
         },
 
         _destroy: function (event) {
-            console.log("destroyOne");
-
             this.$el.fullCalendar('removeEvents', event.id);
         }
-
 
     });
 
@@ -450,16 +463,19 @@ jQuery(document).ready(function ($) {
         }
     });
 
-
-
     HMC.Views.Table = Backbone.View.extend({
         // The collection will be kept here
         collection: null,
 
         el:$("#hmc_count_table"),
 
+        events: {
+            "click .hmc-table-new-report": "onNew"
+        },
+
         initialize: function(options) {
             this.collection = new HMC.Models.Reports();
+            this.editor= new HMC.Views.ReportView();
 
             // Ensure our methods keep the `this` reference to the view itself
             _.bindAll(this, 'render');
@@ -474,8 +490,12 @@ jQuery(document).ready(function ($) {
             this.collection.fetch({reset: true , data: $.param(obj)});
         },
 
+        onNew: function (){
+            console.log("pipppo");
+            this.editor.onNew(moment(), this.collection);
+        },
+
         render: function() {
-            console.log("AAAA");
             var element = this.$el;
             // Clear potential old entries first
             element.empty();
@@ -495,11 +515,10 @@ jQuery(document).ready(function ($) {
 
             return this;
         }
-    });;
-
+    });
 
     var countModels= new HMC.Models.Reports();
-
+    var reportEditor=new HMC.Views.ReportView();
     var page = new HMC.Views.Calendar().render();
     var type_0 = new HMC.Views.PieChart({
         id: 'cat_type_0',

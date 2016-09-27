@@ -56,8 +56,9 @@
 			<h2>Spese Variabili</h2>
 			<p>Qui puoi osservare ed aggiungere le tue registrazioni organizzate per settimana o per mese. E'
 				possibile aggiungere una nuova voce di spesa facendo click sulla colonna desiderata</p>
-			<div id='hmc_calendar'></div>
-			<p><a class="button-primary" >Aggiungi</a></p>
+			<div id='hmc_calendar'>
+			<p><a class="hmc-caledar-new-report button-primary" >Aggiungi</a></p>
+			</div>
 		</div>
 	</div>
 
@@ -80,15 +81,12 @@
 				  <tr><td cellspan="4">None!</td></tr>
 				</tbody>
 			</table>
-
-		<p><a class="button-primary" >Aggiungi</a></p>
+		<p></p>
 		</div>
 	</div>
 
 
 	<div id='report_dialog' class='dialog ui-helper-hidden'>
-
-
 		<table>
 			<tr>
 				<td>
@@ -114,13 +112,11 @@
 			<tr>
 				<td>
 					<!-- <input class="large-text" type="text" name="dates" value="<%- dates %>"/> -->
-					<input type="hidden" id="hmc_value_date">
+					<input type="hidden" id="hmc_value_date" >
 				</td>
 			</tr>
 		</table>
-
 		<span id="hmc-processing"><div class="spinner is-active"></div>Processing</span>
-
 	</div>
 
 </div>

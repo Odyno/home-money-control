@@ -39,8 +39,11 @@ This plugin template is designed to help you get started with any new WordPress 
 
 == Changelog ==
 
+= 1.0.2 =
+* bugfix
+
 = 1.0.1 =
 * Statitics
 
-= 1.0 =
+= 1.0.0 =
 * Initial release
