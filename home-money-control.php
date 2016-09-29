@@ -20,11 +20,11 @@
  * Plugin Name:       Home Money Control
  * Plugin URI:        http://www.staniscia.net
  * Description:       This plugin add to wodprdress the Rest interface for the management and report of your bill and profict and simple page to managemnt/report of it
- * Version:           1.0.2
+ * Version:           1.0.3
  * Author:            Alessandro Staniscia
  * Author URI:        http://www.staniscia.net
  * Requires at least: 4.0
- * Tested up to:      4.0
+ * Tested up to:      4.6
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       home-money-control

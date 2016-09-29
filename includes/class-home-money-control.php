@@ -193,6 +193,10 @@ class Home_Money_Control {
 
 	public function enqueue_scripts(){
 
+		wp_register_script( $this->plugin_slug . '-ajax-retry-script', plugins_url( 'lib/jquery.ajaxretry.js', __HMC_FILE__ ), array(
+			'jquery'
+		), $this->version );
+
 		wp_register_script( $this->plugin_slug . '-admin-base-script', plugins_url( 'assets/js/admin/base_admin.js', __HMC_FILE__ ), array(
 			'jquery',
 			'backbone',
@@ -243,6 +247,7 @@ class Home_Money_Control {
 			return;
 		}
 
+		wp_enqueue_script( $this->plugin_slug . '-ajax-retry-script' );
 
 		wp_enqueue_script( $this->plugin_slug . '-admin-base-script' );
 		wp_enqueue_script( $this->plugin_slug . '-moment-script' );

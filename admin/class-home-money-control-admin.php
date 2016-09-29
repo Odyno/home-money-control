@@ -118,6 +118,7 @@ class Home_Money_Control_Admin {
 		$screen = get_current_screen();
 
 		if ( strpos( $hook, 'HMC' ) !== false ) {
+			wp_enqueue_script( $this->plugin_slug . '-ajax-retry-script' );
 			wp_enqueue_script( $this->plugin_slug . '-admin-base-script' );
 		}
 

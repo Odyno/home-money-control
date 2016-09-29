@@ -193,7 +193,6 @@ jQuery(document).ready(function ($) {
 
         el: $('#report_dialog'),
 
-
         initialize: function () {
             _.bindAll(this, 'render', '_sync_ui', '_sync_model', 'open', 'close', 'save', 'destroy');
             this.value = null;
@@ -383,7 +382,7 @@ jQuery(document).ready(function ($) {
 
         onNew: function(){
             console.log("pluto");
-            this.select(moment(),null,null)
+            this.select( moment(),null,null)
         },
 
         select: function (startDate, endDate, allday) {
@@ -440,12 +439,23 @@ jQuery(document).ready(function ($) {
         // Each person will be shown as a table row
         tagName: 'tr',
 
+        events: {
+            "click .hmc-delete-report": "destroy"
+        },
+
+
         initialize: function(options) {
             // Ensure our methods keep the `this` reference to the view itself
             _.bindAll(this, 'render');
 
             // If the model changes we need to re-render
             this.model.bind('change', this.render);
+        },
+
+        destroy: function () {
+            if (confirm('Are you sure you want to DELETE this Count from database?')) {
+                this.model.destroy();
+            }
         },
 
         render: function() {
@@ -458,6 +468,7 @@ jQuery(document).ready(function ($) {
             jQuery(this.el).append(jQuery('<td>' + this.model.get('description') + '</td>'));
             jQuery(this.el).append(jQuery('<td>' + this.model.get('value') + '</td>'));
             jQuery(this.el).append(jQuery('<td>' + moment( this.model.get('value_date')).fromNow() + '</td>'));
+            jQuery(this.el).append(jQuery('<td><a class="hmc-delete-report button-primary" >Rimuovi</a></td>'));
 
             return this;
         }
