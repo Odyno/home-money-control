@@ -74,6 +74,30 @@ if ( ! class_exists( 'HMC_Statistics' ) ) {
 			return $wpdb->get_results( $select, ARRAY_A );
 		}
 
+		public function get_mounth_summary($type = array()){
+
+			global $wpdb;
+			$table_name_trans      = $wpdb->prefix .'HMC_TRANS';
+			$table_name_cat        = $wpdb->prefix .'HMC_CATEGORY';
+
+			$select='
+				select
+				  SUM(trans.value) as sum,
+				  DATE_FORMAT(trans.value_date,\'%M %X\') as date
+				FROM
+						  '.$table_name_trans.' as trans,
+						  '.$table_name_cat.' as cat
+				WHERE
+				  1
+				  and trans.category_id = cat.id
+				  and cat.type in ('.implode(",",$type).')
+				  GROUP BY MONTH(trans.value_date)
+			';
+
+
+			return $wpdb->get_results( $select, ARRAY_A );
+		}
+
 	}
 
 }

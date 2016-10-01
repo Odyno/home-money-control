@@ -48,6 +48,11 @@ HMC.COUNT_TYPE = {
         label: "Uscite",
         color: "#0000FF"
     },
+    BUDGET: {
+        id: 6,
+        label: "Budget",
+        color: "#ffbc00"
+    },
     getColor: function (id) {
         if (this.SOPRAVVIVENZA.id == id) {
             return this.SOPRAVVIVENZA.color;

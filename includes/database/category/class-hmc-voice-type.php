@@ -70,18 +70,33 @@ if ( ! class_exists( 'HMC_Voice_Type' ) ) {
 		 */
 		const USCITE_FISSE = 5;
 
+		const BUDGET = 6;
+
 		/**
 		 * @var array
 		 */
 		static $types = array(
-			'SOPRAVVIVENZA',
-			'SERVIZI OPTIONAL',
-			'HOBBIES E TEMPO LIBERO',
-			'IMPREVISTI EXTRA',
-			'ENTRATE',
-			'USCITE FISSE'
+			'Sopravvivenza',
+			'Optional',
+			'Hobbies',
+			'Imprevisti',
+			'Entrate',
+			'Uscite',
+			'Budget'
 		);
 
+		/**
+		 * @var array
+		 */
+		static $colors = array(
+			'#298048',
+			'#ADD8E6',
+			'#FFA500',
+			'#FF0000',
+			'#008000',
+			'#0000FF',
+			'#ffbc00'
+		);
 
 		/**
 		 * @param $in
@@ -127,6 +142,20 @@ if ( ! class_exists( 'HMC_Voice_Type' ) ) {
 			}
 
 			return HMC_Voice_Type::$types[ $id ];
+		}
+
+		/**
+		 * @param $id
+		 *
+		 * @return mixed
+		 * @throws Exception
+		 */
+		static public function toColor( $id ) {
+			if ( ! isset( HMC_Voice_Type::$colors[ $id ] ) ) {
+				throw new Exception( "not Found" );
+			}
+
+			return HMC_Voice_Type::$colors[ $id ];
 		}
 
 

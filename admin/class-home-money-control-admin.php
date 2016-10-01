@@ -135,6 +135,12 @@ class Home_Money_Control_Admin {
 			wp_enqueue_script( $this->plugin_slug . '-admin-views-report-script' );
 		}
 
+
+		if ( strpos( $hook, 'HMC-id-root-menu' ) !== false ) {
+			wp_enqueue_script( $this->plugin_slug . '-moment-script' );
+			wp_enqueue_script( $this->plugin_slug . '-chartjs' );
+		}
+
 	}
 
 

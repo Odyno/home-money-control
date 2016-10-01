@@ -39,6 +39,11 @@ This plugin template is designed to help you get started with any new WordPress 
 
 == Changelog ==
 
+
+= 1.0.4 =
+* Statistics
+* Ajax Retry
+
 = 1.0.2 =
 * bugfix
 
