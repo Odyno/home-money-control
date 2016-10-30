@@ -57,33 +57,33 @@
 			<p>Qui puoi osservare ed aggiungere le tue registrazioni organizzate per settimana o per mese. E'
 				possibile aggiungere una nuova voce di spesa facendo click sulla colonna desiderata</p>
 			<div id='hmc_calendar'>
-			<p><a class="hmc-caledar-new-report button-primary" >Aggiungi</a></p>
+			<p><a class="hmc-add-report button-primary" >Aggiungi</a></p>
 			</div>
 		</div>
 	</div>
 
 	<div class="welcome-panel">
 		<div class="welcome-panel-content">
-			<h2>Entrate ed Uscire Fisse</h2>
-			<p>Qui puoi osservare ed aggiungere le tue spese ed entrate previste</p>
+			<h2>Entrate fisse</h2>
+			<p>Qui puoi osservare ed aggiungere le tue entrate previste</p>
 			<!-- The empty table we'll use as the example -->
-			<table class="widefat">
-				<thead>
-				<tr >
-					<th class="row-title" >Gruppo</th>
-					<th class="row-title">Descrizione</th>
-					<th class="row-title">Valore</th>
-					<th class="row-title">Data Prevista</th>
-				</tr>
-				</thead>
-				<!-- We'll attach the PeopleView to this element -->
-				<tbody id="hmc_count_table" >
-				  <tr><td cellspan="4">None!</td></tr>
-				</tbody>
-			</table>
+			<div id="hmc_table_entrate_fisse" ></div>
 		<p></p>
 		</div>
 	</div>
+
+
+	<div class="welcome-panel">
+		<div class="welcome-panel-content">
+			<h2>Uscire fisse</h2>
+			<p>Qui puoi osservare ed aggiungere le tue spese previste</p>
+			<!-- The empty table we'll use as the example -->
+			<div id="hmc_table_uscite_fisse" ></div>
+			<p></p>
+		</div>
+	</div>
+
+
 
 
 	<div id='report_dialog' class='dialog ui-helper-hidden'>
@@ -120,3 +120,34 @@
 	</div>
 
 </div>
+
+
+
+<script type="text/template" id="transaction-table-template">
+	<!-- The empty table we'll use as the example -->
+	<table class="widefat">
+		<thead>
+		<tr>
+
+			<th class="row-title" >Gruppo</th>
+			<th class="row-title">Descrizione</th>
+			<th class="row-title">Valore</th>
+			<th class="row-title">Data Prevista</th>
+			<th class="row-title">Commands</th>
+		</tr>
+		</thead>
+		<!-- We'll attach the PeopleView to this element -->
+		<tbody id="hmc_table_content" >
+		<tr><td celspan="5">None!</td></tr>
+		</tbody>
+		<tfoot>
+			<tr >
+				<th ></th>
+				<th >Totale</th>
+				<th ><span id="hmc_table_summ" class="enMoney"></span></th>
+				<th ></th>
+				<th ><a class="hmc-add-report button-primary" >Aggiungi</a></th>
+			</tr>
+		</tfoot>
+	</table>
+</script>

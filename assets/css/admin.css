@@ -190,3 +190,6 @@ header .align-right {
 .hmc_stats li canvas {
   max-width: 200px;
 }
+.enMoney::before {
+  content: "€ ";
+}
