@@ -38,10 +38,13 @@ jQuery(document).ready(function($) {
     loadData: function (){
       var _me=this;
       $.ajax({
-        context: _me, url: "/wp-json/hmc/v1/stats/", success: function(result) {
+        context: _me,
+        dataType: 'json',
+        url: "/wp-json/hmc/v1/stats/",
+        success: function(result) {
           _me.parseData(result);
           _me.render();
-        }
+        },
       });
     },
 
@@ -505,6 +508,8 @@ jQuery(document).ready(function($) {
     // The collection will be kept here
     collection: null,
 
+    _me:this,
+
     events: {
       "click .hmc-add-report": "onNew",
       "click .hmc-refresh-report": "onRefresh"
@@ -527,8 +532,11 @@ jQuery(document).ready(function($) {
       this.collection.bind('remove', this.render);
       this.collection.bind('change', this.render);
       this.collection.bind('destroy', this.render);
+      this.collection.bind('error', this.render);
       this.loadData();
     },
+
+
 
     loadData: function(){
       "use strict";
