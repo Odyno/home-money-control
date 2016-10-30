@@ -133,7 +133,7 @@
 			<th class="row-title">Descrizione</th>
 			<th class="row-title">Valore</th>
 			<th class="row-title">Data Prevista</th>
-			<th class="row-title">Commands</th>
+			<th class="row-title"></th>
 		</tr>
 		</thead>
 		<!-- We'll attach the PeopleView to this element -->
@@ -146,7 +146,10 @@
 				<th >Totale</th>
 				<th ><span id="hmc_table_summ" class="enMoney"></span></th>
 				<th ></th>
-				<th ><a class="hmc-add-report button-primary" >Aggiungi</a></th>
+				<th >
+					<a class="hmc-add-report button-primary" >Aggiungi</a>
+					<a class="hmc-refresh-report button" >Aggiorna</a>
+				</th>
 			</tr>
 		</tfoot>
 	</table>

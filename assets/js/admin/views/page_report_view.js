@@ -31,13 +31,18 @@ jQuery(document).ready(function($) {
     initialize: function(options) {
       this.elementId = options.id;
       this.count_name = options.name;
+      this.loadData();
+      return this
+    },
+
+    loadData: function (){
+      var _me=this;
       $.ajax({
-        context: this, url: "/wp-json/hmc/v1/stats/", success: function(result) {
-          this.parseData(result);
-          this.render();
+        context: _me, url: "/wp-json/hmc/v1/stats/", success: function(result) {
+          _me.parseData(result);
+          _me.render();
         }
       });
-      return this
     },
 
     parseData: function(data_result) {
@@ -70,6 +75,7 @@ jQuery(document).ready(function($) {
     },
 
     render: function() {
+      var _me= this;
       var private_options = {
         responsive: true,
         padding: 2,
@@ -80,7 +86,10 @@ jQuery(document).ready(function($) {
         title: {
           display: true,
           text: this.title
-        }
+        },
+        onClick: function(){
+          _me.loadData();
+        },
       };
 
       var ctx = document.getElementById(this.elementId).getContext("2d");
@@ -112,6 +121,7 @@ jQuery(document).ready(function($) {
       this.elementId = options.id;
       this.count_name = options.name || "unamed";
       this.count_type = options.type_id || "0";
+
       this.color = options.color || '#' + (Math.random().toString(16) + '0000000').slice(2, 8);
       this.loadData();
       return this;
@@ -176,6 +186,7 @@ jQuery(document).ready(function($) {
     },
 
     render: function() {
+      var _me=this;
       var private_options = {
         responsive: true,
         padding: 2,
@@ -185,7 +196,10 @@ jQuery(document).ready(function($) {
         title: {
           display: true,
           text: this.title
-        }
+        },
+        onClick: function(){
+          _me.loadData();
+        },
       };
 
       var ctx = document.getElementById(this.elementId).getContext("2d");
@@ -492,7 +506,8 @@ jQuery(document).ready(function($) {
     collection: null,
 
     events: {
-      "click .hmc-add-report": "onNew"
+      "click .hmc-add-report": "onNew",
+      "click .hmc-refresh-report": "onRefresh"
     },
 
     initialize: function(options) {
@@ -501,6 +516,7 @@ jQuery(document).ready(function($) {
       this._elementID = options.id;
       this.collection = new HMC.Models.Reports();
       this.editor = new HMC.Views.ReportView();
+      this.categories = options.category
 
       // Ensure our methods keep the `this` reference to the view itself
       _.bindAll(this, 'render');
@@ -511,11 +527,21 @@ jQuery(document).ready(function($) {
       this.collection.bind('remove', this.render);
       this.collection.bind('change', this.render);
       this.collection.bind('destroy', this.render);
+      this.loadData();
+    },
 
+    loadData: function(){
+      "use strict";
       var obj = {
-        type: options.category
+        type: this.categories
       };
       this.collection.fetch({reset: true, data: $.param(obj)});
+    },
+
+    onRefresh: function(){
+      "use strict";
+      this.loadData();
+
     },
 
     onNew: function() {
@@ -546,9 +572,9 @@ jQuery(document).ready(function($) {
     }
   });
 
-  var countModels = new HMC.Models.Reports();
+  //var countModels = new HMC.Models.Reports();
 
-  var reportEditor = new HMC.Views.ReportView();
+  //var reportEditor = new HMC.Views.ReportView();
 
   var page = new HMC.Views.Calendar().render();
 
