@@ -547,7 +547,9 @@ jQuery(document).ready(function($) {
   });
 
   var countModels = new HMC.Models.Reports();
+
   var reportEditor = new HMC.Views.ReportView();
+
   var page = new HMC.Views.Calendar().render();
 
   var type_0 = new HMC.Views.PieChart({
@@ -556,30 +558,35 @@ jQuery(document).ready(function($) {
     type_id: HMC.COUNT_TYPE.HOBBIES_TEMPO_LIBERO.id,
     color: HMC.COUNT_TYPE.HOBBIES_TEMPO_LIBERO.color
   });
+
   var type_1 = new HMC.Views.PieChart({
     id: 'cat_type_1',
     name: HMC.COUNT_TYPE.IMPREVISTI_EXTRA.label,
     type_id: HMC.COUNT_TYPE.IMPREVISTI_EXTRA.id,
     color: HMC.COUNT_TYPE.IMPREVISTI_EXTRA.color
   });
+
   var type_2 = new HMC.Views.PieChart({
     id: 'cat_type_2',
     name: HMC.COUNT_TYPE.SERVIZI_OPTIONAL.label,
     type_id: HMC.COUNT_TYPE.SERVIZI_OPTIONAL.id,
     color: HMC.COUNT_TYPE.SERVIZI_OPTIONAL.color
   });
+
   var type_3 = new HMC.Views.PieChart({
     id: 'cat_type_3',
     name: HMC.COUNT_TYPE.SOPRAVVIVENZA.label,
     type_id: HMC.COUNT_TYPE.SOPRAVVIVENZA.id,
     color: HMC.COUNT_TYPE.SOPRAVVIVENZA.color
   });
+
   var sum = new HMC.Views.SummPieChart({
     id: 'mouth_stat',
     name: 'statistic'
   });
 
   var table1 = new HMC.Views.ReportTable({el: $('#hmc_table_uscite_fisse').get(0), category: "5"});
+
   var table2 = new HMC.Views.ReportTable({el: $('#hmc_table_entrate_fisse').get(0), category: "4"});
 
 });

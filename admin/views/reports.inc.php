@@ -51,21 +51,12 @@
 		</div>
 	</div>
 
-	<div class="welcome-panel">
-		<div class="welcome-panel-content">
-			<h2>Spese Variabili</h2>
-			<p>Qui puoi osservare ed aggiungere le tue registrazioni organizzate per settimana o per mese. E'
-				possibile aggiungere una nuova voce di spesa facendo click sulla colonna desiderata</p>
-			<div id='hmc_calendar'>
-			<p><a class="hmc-add-report button-primary" >Aggiungi</a></p>
-			</div>
-		</div>
-	</div>
+
 
 	<div class="welcome-panel">
 		<div class="welcome-panel-content">
 			<h2>Entrate fisse</h2>
-			<p>Qui puoi osservare ed aggiungere le tue entrate previste</p>
+			<p>Qui puoi osservare le tue entrate previste</p>
 			<!-- The empty table we'll use as the example -->
 			<div id="hmc_table_entrate_fisse" ></div>
 		<p></p>
@@ -75,15 +66,24 @@
 
 	<div class="welcome-panel">
 		<div class="welcome-panel-content">
-			<h2>Uscire fisse</h2>
-			<p>Qui puoi osservare ed aggiungere le tue spese previste</p>
+			<h2>Spese fisse</h2>
+			<p>Qui puoi osservare le tue spese previste</p>
 			<!-- The empty table we'll use as the example -->
 			<div id="hmc_table_uscite_fisse" ></div>
 			<p></p>
 		</div>
 	</div>
 
-
+	<div class="welcome-panel">
+		<div class="welcome-panel-content">
+			<h2>Spese Variabili</h2>
+			<p>Qui puoi osservare ed aggiungere le tue registrazioni organizzate per settimana o per mese. E'
+				possibile aggiungere una nuova voce di spesa facendo click sulla colonna desiderata</p>
+			<div id='hmc_calendar'>
+				<p><a class="hmc-add-report button-primary" >Aggiungi</a></p>
+			</div>
+		</div>
+	</div>
 
 
 	<div id='report_dialog' class='dialog ui-helper-hidden'>
