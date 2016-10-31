@@ -1,7 +1,7 @@
 {
 	"name": "HMC",
 	"title": "HMC",
-	"version": "1.0.4",
+	"version": "1.0.8",
 	"homepage": "https://github.com/Odyno/home-money-control",
 	"main": "Gruntfile.js",
 	"devDependencies": {
@@ -9,6 +9,7 @@
 		"grunt-contrib-uglify": "~0.4.0",
 		"grunt-contrib-less": "~0.11.1",
 		"grunt-contrib-cssmin": "~0.9.0",
-		"grunt-contrib-watch": "~0.6.1"
+		"grunt-contrib-watch": "~0.6.1",
+		"daterangepicker": "https://github.com/dangrossman/bootstrap-daterangepicker.git"
 	}
 }

@@ -487,19 +487,15 @@ jQuery(document).ready(function($) {
 
     render: function() {
       // Clear existing row data if needed
-      jQuery(this.el).empty();
+      this.$el.empty();
 
       this.$el.addClass("type_" + this.model.get('category')['type']);
 
-      //this.$el.addClass("alternate");
-
       // Write the table columns
-      jQuery(this.el).append(jQuery('<td>' + this.model.get('category')['name'] + '</td>'));
-      jQuery(this.el).append(jQuery('<td>' + this.model.get('description') + '</td>'));
-      jQuery(this.el).append(jQuery('<td> <span class="enMoney">' + this.model.get('value') + '</span></td>'));
-      jQuery(this.el).append(jQuery('<td>' + moment(this.model.get('value_date')).fromNow() + '</td>'));
-      jQuery(this.el).append(jQuery('<td><a class="hmc-delete-report button-primary" >Cancella</a></td>'));
-
+      this.$el.append($('<td>' + moment(this.model.get('value_date')).fromNow() + '</td>'));
+      this.$el.append($('<td>' + this.model.get('category')['name'] + '</td>'));
+      this.$el.append($('<td>' + this.model.get('description') + '</td>'));
+      this.$el.append($('<td> <span class="enMoney">' + this.model.get('value') + '</span> <a class="alignright hmc-delete-report" ><span class="dashicons dashicons-trash"></span></a></td>'));
       return this;
     }
   });
@@ -508,24 +504,27 @@ jQuery(document).ready(function($) {
     // The collection will be kept here
     collection: null,
 
-    _me:this,
+    template: _.template($('#transaction-table-template').html()),
+
+
+    _me: this,
 
     events: {
       "click .hmc-add-report": "onNew",
-      "click .hmc-refresh-report": "onRefresh"
+      "click .hmc-refresh-report": "onRefresh",
+      "click .hmc-last-mount-report": "onStepBefore",
+      "click .hmc-next-mount-report": "onStepAfter",
+      "click .hmc-this-mount-report": "onMoveToday",
     },
 
     initialize: function(options) {
-      this.template = _.template($('#transaction-table-template').html());
 
       this._elementID = options.id;
       this.collection = new HMC.Models.Reports();
       this.editor = new HMC.Views.ReportView();
-      this.categories = options.category
-
+      this.categories = options.category;
       // Ensure our methods keep the `this` reference to the view itself
       _.bindAll(this, 'render');
-
       // Bind collection changes to re-rendering
       this.collection.bind('reset', this.render);
       this.collection.bind('add', this.render);
@@ -533,14 +532,32 @@ jQuery(document).ready(function($) {
       this.collection.bind('change', this.render);
       this.collection.bind('destroy', this.render);
       this.collection.bind('error', this.render);
-      this.loadData();
+      this.onMoveToday();
     },
 
 
+    onStepBefore: function(){
+      this.startDate = moment(this.startDate).subtract(1, 'month').startOf('month');
+      this.endDate = moment(this.endDate).subtract(1, 'month').endOf('month');
+      this.onRefresh();
+    },
+
+    onStepAfter: function(){
+      this.startDate = moment(this.startDate).add(1, 'month').startOf('month');
+      this.endDate = moment(this.endDate).add(1, 'month').endOf('month');
+      this.onRefresh();
+    },
+
+    onMoveToday: function(){
+      this.startDate = moment().startOf('month');
+      this.endDate = moment().endOf('month');
+      this.onRefresh();
+    },
 
     loadData: function(){
-      "use strict";
       var obj = {
+        from: this.startDate.format("YYYY-MM-DD HH:mm:ss"),
+        to: this.endDate.format("YYYY-MM-DD HH:mm:ss"),
         type: this.categories
       };
       this.collection.fetch({reset: true, data: $.param(obj)});
@@ -556,8 +573,17 @@ jQuery(document).ready(function($) {
       this.editor.onNew(moment(), this.collection);
     },
 
+    updateRage: function(start, end){
+      this.startDate = start;
+      this.endDate = end;
+      this.loadData();
+    },
+
     render: function() {
-      $(this.el).html(this.template());
+
+      this.$el.html(this.template());
+
+      this.$el.find('#reportrange').html(this.startDate.format('MMMM YYYY'));
 
       var element = this.$el.find("#hmc_table_content");
       element.empty();

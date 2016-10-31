@@ -70,6 +70,9 @@ if ( ! class_exists( 'HMC_Voice_Type' ) ) {
 		 */
 		const USCITE_FISSE = 5;
 
+		/**
+		 *
+		 */
 		const BUDGET = 6;
 
 		/**

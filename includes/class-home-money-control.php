@@ -189,14 +189,19 @@ class Home_Money_Control {
 		wp_register_style( $this->plugin_slug . '-fullcalendar-style-2', plugins_url( 'lib/fullcalendar/dist/fullcalendar.print.css', __HMC_FILE__ ), array( $this->plugin_slug . '-fullcalendar-style' ), $this->version, 'print' );
 		wp_register_style( $this->plugin_slug . '-jquery-dialog', plugins_url( 'lib/fullcalendar/dist/fullcalendar.print.css', __HMC_FILE__ ), array( $this->plugin_slug . '-fullcalendar-style' ), $this->version, 'print' );
 
+		wp_register_style(
+			$this->plugin_slug . '-date-range-picker-style',
+			plugins_url( 'lib/daterangepicker/daterangepicker.css', __HMC_FILE__ ),
+			array(),
+			$this->version
+		);
+
 	}
 
 	public function enqueue_scripts(){
 
-		/*wp_register_script( $this->plugin_slug . '-ajax-retry-script', plugins_url( 'lib/jquery.ajaxretry.js', __HMC_FILE__ ), array(
-			'jquery'
-		), $this->version );
-*/
+
+
 		wp_register_script( $this->plugin_slug . '-admin-base-script', plugins_url( 'assets/js/admin/base_admin.js', __HMC_FILE__ ), array(
 			'jquery',
 			'backbone',
@@ -228,6 +233,13 @@ class Home_Money_Control {
 			'jquery-ui-autocomplete'
 		), $this->version );
 
+
+		wp_register_script( $this->plugin_slug . '-date-range-picker-script', plugins_url( 'lib/daterangepicker/daterangepicker.js', __HMC_FILE__ ), array(
+			'jquery',
+			$this->plugin_slug . '-moment-script'
+		), $this->version );
+
+
 	}
 
 	public function apply_styles(){
@@ -237,6 +249,7 @@ class Home_Money_Control {
 		wp_enqueue_style( 'wp-jquery-ui-dialog' );
 		wp_enqueue_style( $this->plugin_slug . '-fullcalendar-style' );
 		wp_enqueue_style( $this->plugin_slug . '-admin-styles' );
+		wp_enqueue_style( $this->plugin_slug . '-date-range-picker-style');
 
 		wp_enqueue_style( __PNAMESPANE__ . '-frontend' );
 	}
@@ -254,6 +267,7 @@ class Home_Money_Control {
 		wp_enqueue_script( $this->plugin_slug . '-fullcalendar-script' );
 		wp_enqueue_script( $this->plugin_slug . '-admin-model-counts-script' );
 		wp_enqueue_script( $this->plugin_slug . '-admin-views-report-script' );
+		wp_enqueue_script( $this->plugin_slug . '-date-range-picker-script' );
 
 		//wp_enqueue_script( __PNAMESPANE__ . '-frontend' );
 	}

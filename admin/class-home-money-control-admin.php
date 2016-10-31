@@ -104,6 +104,7 @@ class Home_Money_Control_Admin {
 		if ( strpos( $hook, 'HMC-id-menu-reports-list' ) !== false ) {
 			wp_enqueue_style( 'wp-jquery-ui-dialog' );
 			wp_enqueue_style( $this->plugin_slug . '-fullcalendar-style');
+			wp_enqueue_style( $this->plugin_slug . '-date-range-picker-style');
 		}
 
 	}
@@ -133,6 +134,8 @@ class Home_Money_Control_Admin {
 			wp_enqueue_script( $this->plugin_slug . '-chartjs' );
 			wp_enqueue_script( $this->plugin_slug . '-admin-model-counts-script' );
 			wp_enqueue_script( $this->plugin_slug . '-admin-views-report-script' );
+			wp_enqueue_script( $this->plugin_slug . '-date-range-picker-script' );
+
 		}
 
 
