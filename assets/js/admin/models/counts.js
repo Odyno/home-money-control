@@ -57,9 +57,30 @@ jQuery(document).ready(function ($) {
     });
 
 
+    HMC.Models.AllStat = Backbone.Model.extend({
+        defaults: function (){
+            return {
+                from: '2016-10-01',
+                to: '2016-10-31',
+                count: '0',
+                items : [],
+            };
+        },
+        url: '/wp-json/hmc/v1/allstats'
+    });
 
-
-    
-    
+    HMC.Models.Statistic = Backbone.Model.extend({
+        defaults: function (){
+            return {
+                type: '6',
+                from: '2016-10-01',
+                to: '2016-10-31',
+                count: '0',
+                total: '0',
+                items : [],
+            };
+        },
+        url: '/wp-json/hmc/v1/stats'
+    });
 
 });

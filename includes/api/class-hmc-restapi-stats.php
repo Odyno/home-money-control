@@ -52,7 +52,7 @@ if ( ! class_exists( 'HMC_RestAPI_Stats' ) ) {
 			$namespace = 'hmc/v' . $version;
 			$base      = 'stats';
 
-			register_rest_route( $namespace, '/' . $base , array(
+			register_rest_route( $namespace, '/all' . $base , array(
 				array(
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => array( $this, 'get_summary' ),

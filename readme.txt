@@ -39,6 +39,10 @@ This plugin template is designed to help you get started with any new WordPress 
 
 == Changelog ==
 
+
+= 1.0.9 =
+* Added Full Models
+
 = 1.0.8 =
 * Reordered Table
 

@@ -31,21 +31,25 @@ jQuery(document).ready(function($) {
     initialize: function(options) {
       this.elementId = options.id;
       this.count_name = options.name;
+
+
+      this.model = new HMC.Models.AllStat();
+      this.listenTo(this.model, 'reset', this.update);
+      this.listenTo(this.model, 'add', this.update);
+      this.listenTo(this.model, 'change', this.update);
+      this.listenTo(this.model, 'destroy', this.update);
       this.loadData();
+
       return this
     },
 
     loadData: function (){
-      var _me=this;
-      $.ajax({
-        context: _me,
-        dataType: 'json',
-        url: "/wp-json/hmc/v1/stats/",
-        success: function(result) {
-          _me.parseData(result);
-          _me.render();
-        },
-      });
+      this.model.fetch();
+    },
+
+    update: function(){
+      this.parseData(this.model.toJSON());
+      this.render();
     },
 
     parseData: function(data_result) {
@@ -126,17 +130,24 @@ jQuery(document).ready(function($) {
       this.count_type = options.type_id || "0";
 
       this.color = options.color || '#' + (Math.random().toString(16) + '0000000').slice(2, 8);
+
+      this.model = new HMC.Models.Statistic();
+      this.listenTo(this.model, 'reset', this.update);
+      this.listenTo(this.model, 'add', this.update);
+      this.listenTo(this.model, 'change', this.update);
+      this.listenTo(this.model, 'destroy', this.update);
       this.loadData();
+
       return this;
     },
 
     loadData: function() {
-      $.ajax({
-        context: this, url: "/wp-json/hmc/v1/stats/" + this.count_type, success: function(result) {
-          this.parseData(result);
-          this.render();
-        }
-      });
+      this.model.fetch({ url: '/wp-json/hmc/v1/stats/'+this.count_type });
+    },
+
+    update: function(){
+      this.parseData(this.model.toJSON());
+      this.render();
     },
 
     parseData: function(data_result) {
@@ -506,7 +517,6 @@ jQuery(document).ready(function($) {
 
     template: _.template($('#transaction-table-template').html()),
 
-
     _me: this,
 
     events: {
@@ -601,7 +611,6 @@ jQuery(document).ready(function($) {
       this.$el.find("#hmc_table_summ").append(total);
       //this.$el.find("#hmc_table_num").append(this.collection.lenght());
 
-
       return this;
     }
   });
@@ -644,6 +653,7 @@ jQuery(document).ready(function($) {
     id: 'mouth_stat',
     name: 'statistic'
   });
+
 
   var table1 = new HMC.Views.ReportTable({el: $('#hmc_table_uscite_fisse').get(0), category: "5"});
 
