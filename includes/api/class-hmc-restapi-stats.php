@@ -60,6 +60,14 @@ if ( ! class_exists( 'HMC_RestAPI_Stats' ) ) {
 				)
 			) );
 
+			register_rest_route( $namespace, '/stats/transactions' , array(
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_transaction_stat' ),
+					'permission_callback' => array( $this, 'get_permissions_check' )
+				)
+			) );
+
 			register_rest_route( $namespace, '/' . $base . '/(?P<id>[\w|-]+)', array(
 				array(
 					'methods'             => WP_REST_Server::READABLE,
@@ -109,7 +117,34 @@ if ( ! class_exists( 'HMC_RestAPI_Stats' ) ) {
 			return new WP_REST_Response( $out, 200 );
 		}
 
-		/**
+
+		public function get_transaction_stat( $request ) {
+			if ( isset( $request->get_params()['from']) ){
+				$from = $request->get_params()['from'];
+			}else{
+				$from = date( "Y-m", time() ) . "-01";
+			}
+
+			if ( isset($request->get_params()['to']) ){
+				$to = $request->get_params()['to'];
+			}else{
+				$to = date( "Y-m-t", time() );
+			}
+
+			$transaction_total = $this->stats_handler->get_transactions_total(  $from, $to );
+			$transaction_avg = $this->stats_handler->get_transactions_avg( );
+
+			$out=array();
+			$out['from']=$from;
+			$out['to']=$to;
+			$out['totals']=$transaction_total;
+			$out['avgs']=$transaction_avg;
+
+			return new WP_REST_Response( $out, 200 );
+
+		}
+
+			/**
 		 * Get a collection of items
 		 *
 		 * @param WP_REST_Request $request Full data about the request.

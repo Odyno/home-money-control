@@ -98,6 +98,62 @@ if ( ! class_exists( 'HMC_Statistics' ) ) {
 			return $wpdb->get_results( $select, ARRAY_A );
 		}
 
+
+		public function get_transactions_total( $from = null, $to = null ){
+			global $wpdb;
+			$table_name_trans      = $wpdb->prefix .'HMC_TRANS';
+			$table_name_cat        = $wpdb->prefix .'HMC_CATEGORY';
+
+			if ($from == null)
+				$from='YEAR(NOW()) - MONTH(NOW()) - 01';
+			if ($to == null)
+				$to  ='YEAR(NOW()) - MONTH(NOW()) - LAST_DAY(NOW())';
+
+			$select = ' select
+							SUM(trans.value) as total,
+  							cat.type as type
+						FROM
+						  	'.$table_name_trans.' as trans,
+						    '.$table_name_cat.' as cat
+						WHERE
+							1
+							and trans.category_id = cat.id
+							and trans.user_id = '.get_current_user_id().'
+							and trans.value_date BETWEEN "'.$from.'" AND "'.$to.'"
+						GROUP BY cat.type ';
+
+			return $wpdb->get_results( $select, ARRAY_A );
+		}
+
+
+		public function get_transactions_avg( $from = null, $to = null ){
+			global $wpdb;
+			$table_name_trans      = $wpdb->prefix .'HMC_TRANS';
+			$table_name_cat        = $wpdb->prefix .'HMC_CATEGORY';
+
+			if ($from != null and $to != null)
+				$dateMe = ' and trans.value_date BETWEEN "'.$from.'" AND "'.$to.'"';
+			else
+				$dateMe = '';
+
+			$select = ' select
+							AVG(trans.value) as avg,
+  							cat.type as type
+						FROM
+						  	'.$table_name_trans.' as trans,
+						    '.$table_name_cat.' as cat
+						WHERE
+							1
+							and trans.category_id = cat.id
+							and trans.user_id = '. get_current_user_id() . $dateMe .'
+						GROUP BY cat.type ';
+
+			return $wpdb->get_results( $select, ARRAY_A );
+		}
+
+
+
+
 	}
 
 }

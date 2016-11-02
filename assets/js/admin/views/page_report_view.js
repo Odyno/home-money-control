@@ -615,6 +615,178 @@ jQuery(document).ready(function($) {
     }
   });
 
+
+  HMC.Views.BudgetView = Backbone.View.extend({
+
+
+    events: {
+      "click .hmc-refresh-report": "onRefresh",
+      "click .hmc-last-mount-report": "onStepBefore",
+      "click .hmc-next-mount-report": "onStepAfter",
+      "click .hmc-this-mount-report": "onMoveToday",
+    },
+
+    initialize: function(options) {
+      this.model= new HMC.Models.TransactionStat();
+      this.startDate = moment().startOf('month');
+      this.endDate = moment().endOf('month');
+      this.listenTo(this.model, 'sync', this.update);
+      this.loadData();
+    },
+
+    onStepBefore: function(){
+      this.startDate = moment(this.startDate).subtract(1, 'month').startOf('month');
+      this.endDate = moment(this.endDate).subtract(1, 'month').endOf('month');
+      this.onRefresh();
+    },
+
+    onStepAfter: function(){
+      this.startDate = moment(this.startDate).add(1, 'month').startOf('month');
+      this.endDate = moment(this.endDate).add(1, 'month').endOf('month');
+      this.onRefresh();
+    },
+
+    onMoveToday: function(){
+      this.startDate = moment().startOf('month');
+      this.endDate = moment().endOf('month');
+      this.onRefresh();
+    },
+
+    onRefresh: function(){
+
+      this.loadData();
+
+    },
+
+    loadData: function(){
+      var obj = {
+        from: this.startDate.format("YYYY-MM-DD HH:mm:ss"),
+        to: this.endDate.format("YYYY-MM-DD HH:mm:ss"),
+        type: this.categories
+      };
+      this.model.fetch({reset: true, data: $.param(obj)});
+    },
+
+    update: function(){
+      this.parseData(this.model.toJSON());
+      this.render();
+    },
+
+    parseData: function(data_result) {
+
+      var totals = [0,0,0,0,0,0];
+      var avgs= [0,0,0,0,0,0];
+      var budgets= [0,0,0,0,0,0];
+
+      data_result.avgs.forEach(function(entry) {
+        avgs[entry.type]=entry.avg
+      }, this);
+
+      data_result.totals.forEach(function(entry) {
+        totals[entry.type]=entry.total
+      }, this);
+
+
+
+      this.dataset = {
+        labels: [HMC.COUNT_TYPE.getLabel(0),
+          HMC.COUNT_TYPE.getLabel(1),
+          HMC.COUNT_TYPE.getLabel(2),
+          HMC.COUNT_TYPE.getLabel(3),
+          HMC.COUNT_TYPE.getLabel(4),
+          HMC.COUNT_TYPE.getLabel(5)
+        ],
+        datasets: [
+          this._formatData("Selezione","54, 162, 235",totals),
+          this._formatData("Media","75, 192, 192",avgs),
+          this._formatData("Budget","255, 99, 132",budgets)
+        ]
+      };
+    },
+
+    _formatData: function($label, $color, $data){
+      return {
+        label: $label,
+        backgroundColor: "rgba(" + $color + ", 0.2)",
+        borderColor: "rgba(" + $color + ", 1)",
+        pointBackgroundColor: "rgba(" + $color + ", 1)",
+        pointBorderColor: "#fff",
+        pointHoverBackgroundColor: "#fff",
+        pointHoverBorderColor: "rgba(" + $color + ",1)",
+        data: $data
+      }
+    },
+
+    render: function() {
+
+      var ctx = this.$el.find('#mouth_budget');
+      this.$el.find('#stat_range').html(this.startDate.format('MMMM YYYY'));
+
+
+      var data = {
+        labels: [HMC.COUNT_TYPE.getLabel(0), "Imprevisti", "Sopravviveza", "Options", "Estrate", "Uscite" ],
+        datasets: [
+          {
+            label: "Attuale",
+            backgroundColor: "rgba(75, 192, 192, 0.2)",
+            borderColor: "rgba(75, 192, 192, 1)",
+            pointBackgroundColor: "rgba(75, 192, 192, 1)",
+            pointBorderColor: "#fff",
+            pointHoverBackgroundColor: "#fff",
+            pointHoverBorderColor: "rgba(179,181,198,1)",
+            data: [1900,1090,65, 59, 90, 10]
+          },
+          {
+            label: "Media",
+            backgroundColor: "rgba(54, 162, 235,0.2)",
+            borderColor: "rgba(54, 162, 235,1)",
+            pointBackgroundColor: "rgba(54, 162, 235,1)",
+            pointBorderColor: "#fff",
+            pointHoverBackgroundColor: "#fff",
+            pointHoverBorderColor: "rgba(54, 162, 235,1)",
+            data: [1900,1000,28, 48, 40, 19, 16]
+          },
+          {
+            label: "Budget",
+            backgroundColor: "rgba(255, 99, 132,0.2)",
+            borderColor: "rgba(255, 99, 132,1)",
+            pointBackgroundColor: "rgba(255, 99, 132,1)",
+            pointBorderColor: "#fff",
+            pointHoverBackgroundColor: "#fff",
+            pointHoverBorderColor: "rgba(255, 99, 132,1)",
+            data: [1900,1098,10, 22, 20, 10, 8]
+          }
+        ]
+      };
+
+      var moptions = {
+        legend:{
+          position: 'right'
+        },
+        scale: {
+
+            ticks: {
+              beginAtZero: true
+            }
+        }
+      };
+
+      var myRadarChart = new Chart(ctx, {
+        type: 'radar',
+        data: this.dataset,
+        options: moptions
+      });
+
+      /* this.$el.find( "#budget_type_0" ).slider();
+      this.$el.find( "#budget_type_1" ).slider();
+      this.$el.find( "#budget_type_2" ).slider();
+      this.$el.find( "#budget_type_3" ).slider();*/
+
+    },
+
+  });
+
+
   //var countModels = new HMC.Models.Reports();
 
   //var reportEditor = new HMC.Views.ReportView();
@@ -649,14 +821,16 @@ jQuery(document).ready(function($) {
     color: HMC.COUNT_TYPE.SOPRAVVIVENZA.color
   });
 
-  var sum = new HMC.Views.SummPieChart({
+  /*var sum = new HMC.Views.SummPieChart({
     id: 'mouth_stat',
     name: 'statistic'
-  });
+  });*/
 
 
   var table1 = new HMC.Views.ReportTable({el: $('#hmc_table_uscite_fisse').get(0), category: "5"});
 
   var table2 = new HMC.Views.ReportTable({el: $('#hmc_table_entrate_fisse').get(0), category: "4"});
+
+  var budget = new HMC.Views.BudgetView({el: $('#hmc_budget')});
 
 });

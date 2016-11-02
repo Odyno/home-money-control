@@ -51,14 +51,34 @@
 		<div class="welcome-panel-content">
 			<h2>Obbiettivi</h2>
 			<p>Quanto vuoi risparmiare queste mese?</p>
-			<p></p>
-			<div class="hmc_stats">
+			<!-- div class="hmc_stats">
 				<lu>
 					<li>
 						<canvas id="mouth_stat" style="border-left: 1px solid gray"></canvas>
 					</li>
 				</lu>
+			</div -->
+			<div id='hmc_budget'>
+					<span class="alignright" style="margin-bottom: 10px;" >
+						<a class="hmc-last-mount-report "><span class="dashicons dashicons-arrow-left-alt2" style="margin-top: 3px;"> </span></a>
+						<a class="hmc-this-mount-report "><span class="dashicons dashicons-admin-home"></span><span id="stat_range"></span></a>
+						<a class="hmc-next-mount-report "><span class="dashicons dashicons-arrow-right-alt2"  style="margin-top: 3px;"> </span></a>
+					</span>
+				<!-- p> Entrate <span id="previsione_entrate">10</span> -
+					( Previsione Risparmio <span id="previsione_risparmio"> 3 </span> +
+					 Uscite previste <span id="previsione_risparmio"> 5 </span> ) =
+					Max Spese inpreviste <span id="previsione_risparmio"> 2 </span>
+				</p -->
+
+
+				<canvas id="mouth_budget"></canvas>
+
+				<div id="budget_type_0"></div>
+				<div id="budget_type_1"></div>
+				<div id="budget_type_2"></div>
+				<div id="budget_type_3"></div>
 			</div>
+			<p></p>
 		</div>
 	</div>
 

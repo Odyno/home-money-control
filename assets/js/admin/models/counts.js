@@ -83,4 +83,27 @@ jQuery(document).ready(function ($) {
         url: '/wp-json/hmc/v1/stats'
     });
 
+
+    HMC.Models.TransactionStat = Backbone.Model.extend({
+        defaults: function(){
+            return {
+                from: "2016-11-01",
+                to: "2016-11-30",
+                "totals":[
+                    {"total":"0","type":"4"},
+                    {"total":"0","type":"5"}
+                    ],
+                "avgs":[
+                    {"avg":"0","type":"0"},
+                    {"avg":"0","type":"1"},
+                    {"avg":"0","type":"2"},
+                    {"avg":"0","type":"3"},
+                    {"avg":"0","type":"4"},
+                    {"avg":"0","type":"5"}
+                    ]
+            }
+        },
+        url: '/wp-json/hmc/v1/stats/transactions'
+    });
+
 });
