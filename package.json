@@ -1,7 +1,7 @@
 {
 	"name": "HMC",
 	"title": "HMC",
-	"version": "1.0.9",
+	"version": "1.0.10",
 	"homepage": "https://github.com/Odyno/home-money-control",
 	"main": "Gruntfile.js",
 	"devDependencies": {

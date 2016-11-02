@@ -528,7 +528,6 @@ jQuery(document).ready(function($) {
     },
 
     initialize: function(options) {
-
       this._elementID = options.id;
       this.collection = new HMC.Models.Reports();
       this.editor = new HMC.Views.ReportView();
@@ -564,6 +563,12 @@ jQuery(document).ready(function($) {
       this.onRefresh();
     },
 
+    onRefresh: function(){
+      "use strict";
+      this.loadData();
+
+    },
+
     loadData: function(){
       var obj = {
         from: this.startDate.format("YYYY-MM-DD HH:mm:ss"),
@@ -573,11 +578,7 @@ jQuery(document).ready(function($) {
       this.collection.fetch({reset: true, data: $.param(obj)});
     },
 
-    onRefresh: function(){
-      "use strict";
-      this.loadData();
 
-    },
 
     onNew: function() {
       this.editor.onNew(moment(), this.collection);

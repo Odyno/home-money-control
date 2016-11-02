@@ -2,7 +2,7 @@
 Plugin Name:       Home Money Control
 Plugin URI:        http://www.staniscia.net
 Description:       This plugin add to wodprdress the Rest interface for the management and report of your bill and profict and simple page to managemnt/report of it
-Version:           1.0.7
+Version:           1.0.10
 Author:            Alessandro Staniscia
 Author URI:        http://www.staniscia.net
 Requires at least: 4.0
@@ -39,6 +39,9 @@ This plugin template is designed to help you get started with any new WordPress 
 
 == Changelog ==
 
+= 1.0.10 =
+* Added Radar Chart
+* Removed Summary
 
 = 1.0.9 =
 * Added Full Models
