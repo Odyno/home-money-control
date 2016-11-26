@@ -83,7 +83,9 @@ if ( ! class_exists( 'HMC_Statistics' ) ) {
 			$select='
 				select
 				  SUM(trans.value) as sum,
-				  DATE_FORMAT(trans.value_date,\'%M %X\') as date
+				  DATE_FORMAT(trans.value_date,\'%M %X\') as date,
+				  trans.value_date as raw_date
+
 				FROM
 						  '.$table_name_trans.' as trans,
 						  '.$table_name_cat.' as cat
@@ -92,6 +94,7 @@ if ( ! class_exists( 'HMC_Statistics' ) ) {
 				  and trans.category_id = cat.id
 				  and cat.type in ('.implode(",",$type).')
 				  GROUP BY MONTH(trans.value_date)
+				  ORDER BY YEAR(raw_date) , MONTH(raw_date) , DAY(raw_date) 
 			';
 
 

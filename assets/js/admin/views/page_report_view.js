@@ -218,7 +218,7 @@ jQuery(document).ready(function($) {
 
       var ctx = document.getElementById(this.elementId).getContext("2d");
       this.iChart = new Chart(ctx, {
-        type: 'pie',
+        type: 'doughnut',
         data: this.dataset,
         options: private_options
       });
@@ -619,7 +619,6 @@ jQuery(document).ready(function($) {
 
   HMC.Views.BudgetView = Backbone.View.extend({
 
-
     events: {
       "click .hmc-refresh-report": "onRefresh",
       "click .hmc-last-mount-report": "onStepBefore",
@@ -631,6 +630,16 @@ jQuery(document).ready(function($) {
       this.model= new HMC.Models.TransactionStat();
       this.startDate = moment().startOf('month');
       this.endDate = moment().endOf('month');
+      this.moptions = {
+        legend:{
+          position: 'right'
+        },
+        scale: {
+          ticks: {
+            beginAtZero: true
+          }
+        }
+      };
       this.listenTo(this.model, 'sync', this.update);
       this.loadData();
     },
@@ -654,9 +663,7 @@ jQuery(document).ready(function($) {
     },
 
     onRefresh: function(){
-
       this.loadData();
-
     },
 
     loadData: function(){
@@ -675,34 +682,35 @@ jQuery(document).ready(function($) {
 
     parseData: function(data_result) {
 
-      var totals = [0,0,0,0,0,0];
-      var avgs= [0,0,0,0,0,0];
-      var budgets= [0,0,0,0,0,0];
+      var datarow=[];
+      for (var i = 0; i < 6; i++) {
+        datarow[i] ={
+          label: HMC.COUNT_TYPE.getLabel(i),
+          avg : 0,
+          budget : 0,
+          total : 0
+        }
+      }
 
       data_result.avgs.forEach(function(entry) {
-        avgs[entry.type]=entry.avg
+        datarow[entry.type].avg=entry.avg
       }, this);
 
       data_result.totals.forEach(function(entry) {
-        totals[entry.type]=entry.total
+        datarow[entry.type].total=entry.total
       }, this);
 
-
+      console.log(datarow);
 
       this.dataset = {
-        labels: [HMC.COUNT_TYPE.getLabel(0),
-          HMC.COUNT_TYPE.getLabel(1),
-          HMC.COUNT_TYPE.getLabel(2),
-          HMC.COUNT_TYPE.getLabel(3),
-          HMC.COUNT_TYPE.getLabel(4),
-          HMC.COUNT_TYPE.getLabel(5)
-        ],
+        labels: [ datarow[0].label, datarow[1].label, datarow[2].label, datarow[3].label, datarow[5].label ],
         datasets: [
-          this._formatData("Selezione","54, 162, 235",totals),
-          this._formatData("Media","75, 192, 192",avgs),
-          this._formatData("Budget","255, 99, 132",budgets)
+          this._formatData("Dati","54, 162, 235",[datarow[0].total, datarow[1].total, datarow[2].total, datarow[3].total, datarow[5].total ]),
+          this._formatData("Media"    ,"75, 192, 192",[datarow[0].avg, datarow[1].avg, datarow[2].avg, datarow[3].avg, datarow[5].avg ]),
+          this._formatData("Budget"   ,"255, 99, 132",[datarow[0].budget, datarow[1].budget, datarow[2].budget, datarow[3].budget, datarow[5].budget  ])
         ]
       };
+      console.log(this.dataset);
     },
 
     _formatData: function($label, $color, $data){
@@ -721,68 +729,14 @@ jQuery(document).ready(function($) {
     render: function() {
 
       var ctx = this.$el.find('#mouth_budget');
+
       this.$el.find('#stat_range').html(this.startDate.format('MMMM YYYY'));
 
-
-      var data = {
-        labels: [HMC.COUNT_TYPE.getLabel(0), "Imprevisti", "Sopravviveza", "Options", "Estrate", "Uscite" ],
-        datasets: [
-          {
-            label: "Attuale",
-            backgroundColor: "rgba(75, 192, 192, 0.2)",
-            borderColor: "rgba(75, 192, 192, 1)",
-            pointBackgroundColor: "rgba(75, 192, 192, 1)",
-            pointBorderColor: "#fff",
-            pointHoverBackgroundColor: "#fff",
-            pointHoverBorderColor: "rgba(179,181,198,1)",
-            data: [1900,1090,65, 59, 90, 10]
-          },
-          {
-            label: "Media",
-            backgroundColor: "rgba(54, 162, 235,0.2)",
-            borderColor: "rgba(54, 162, 235,1)",
-            pointBackgroundColor: "rgba(54, 162, 235,1)",
-            pointBorderColor: "#fff",
-            pointHoverBackgroundColor: "#fff",
-            pointHoverBorderColor: "rgba(54, 162, 235,1)",
-            data: [1900,1000,28, 48, 40, 19, 16]
-          },
-          {
-            label: "Budget",
-            backgroundColor: "rgba(255, 99, 132,0.2)",
-            borderColor: "rgba(255, 99, 132,1)",
-            pointBackgroundColor: "rgba(255, 99, 132,1)",
-            pointBorderColor: "#fff",
-            pointHoverBackgroundColor: "#fff",
-            pointHoverBorderColor: "rgba(255, 99, 132,1)",
-            data: [1900,1098,10, 22, 20, 10, 8]
-          }
-        ]
-      };
-
-      var moptions = {
-        legend:{
-          position: 'right'
-        },
-        scale: {
-
-            ticks: {
-              beginAtZero: true
-            }
-        }
-      };
-
       var myRadarChart = new Chart(ctx, {
-        type: 'radar',
+        type: 'bar',
         data: this.dataset,
-        options: moptions
+        options: this.moptions
       });
-
-      /* this.$el.find( "#budget_type_0" ).slider();
-      this.$el.find( "#budget_type_1" ).slider();
-      this.$el.find( "#budget_type_2" ).slider();
-      this.$el.find( "#budget_type_3" ).slider();*/
-
     },
 
   });

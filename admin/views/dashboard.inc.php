@@ -36,11 +36,16 @@ function hmc_format_me($iArray){
 	}
 	return array("data" => $iData, "label" => $iLabel, "sum" => $summ );
 }
-$iSpese= hmc_format_me($iHMC_Stat->get_mounth_summary(array(0,1,2,3)));
-$iEntrate=hmc_format_me($iHMC_Stat->get_mounth_summary(array(4)));
-$iUscite= hmc_format_me($iHMC_Stat->get_mounth_summary(array(5)));
-$iBudget= hmc_format_me($iHMC_Stat->get_mounth_summary(array(6)));
 
+//Recuperare le entrate dalla storia
+$entrate_data_row=$iHMC_Stat->get_mounth_summary(array(4));
+$iEntrate=hmc_format_me($entrate_data_row);
+$uscite_data_row=$iHMC_Stat->get_mounth_summary(array(5));
+$iUscite= hmc_format_me($uscite_data_row);
+
+//crea array dati per chart A
+$iSpese= hmc_format_me($iHMC_Stat->get_mounth_summary(array(0,1,2,3)));
+$iBudget= hmc_format_me($iHMC_Stat->get_mounth_summary(array(6)));
 
 $iSpese_0= hmc_format_me($iHMC_Stat->get_mounth_summary(array(0)));
 $iSpese_1= hmc_format_me($iHMC_Stat->get_mounth_summary(array(1)));
