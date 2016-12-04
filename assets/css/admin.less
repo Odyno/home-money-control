@@ -232,10 +232,9 @@ header {
   }
 }
 
-
 .hmc_stats {
   li {
-    display:inline-block;
+    display: inline-block;
     canvas {
       max-width: 200px;
     }
@@ -248,3 +247,77 @@ header {
   }
 }
 
+/* The Modal (background) */
+/* Modal Content */
+/* Add Animation */
+
+/* The Close Button */
+.hmc-modal {
+  display: none;
+  position: fixed;
+  z-index: 9991;
+  padding-top: 100px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.4);
+
+  .hmc-modal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 90%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 5px;
+
+    max-height: 70%;
+    overflow: auto;
+
+    .hmc-modal-header {
+      padding: 2px 16px;
+    }
+
+    .hmc-modal-body {
+      padding: 2px 16px;
+    }
+
+    .hmc-modal-footer {
+      border-top: 1px dotted @color_6;
+      text-align: right;
+      padding: 10px 16px;
+    }
+  }
+}
+
+
+button.accordion {
+  background-color: #eee;
+  color: #444;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+  transition: 0.4s;
+}
+
+button.accordion.active, button.accordion:hover {
+  background-color: #ddd;
+}
+
+div.panel {
+  padding: 0 18px;
+  display: none;
+  background-color: white;
+}
+
+div.panel.show {
+  display: block;
+}

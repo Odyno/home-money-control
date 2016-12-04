@@ -1,15 +1,19 @@
 {
-	"name": "HMC",
-	"title": "HMC",
-	"version": "1.0.10",
-	"homepage": "https://github.com/Odyno/home-money-control",
-	"main": "Gruntfile.js",
-	"devDependencies": {
-		"grunt": "~0.4.5",
-		"grunt-contrib-uglify": "~0.4.0",
-		"grunt-contrib-less": "~0.11.1",
-		"grunt-contrib-cssmin": "~0.9.0",
-		"grunt-contrib-watch": "~0.6.1",
-		"daterangepicker": "https://github.com/dangrossman/bootstrap-daterangepicker.git"
-	}
+  "name": "HMC",
+  "title": "HMC",
+  "version": "0.0.1",
+  "homepage": "https://github.com/Odyno/home-money-control",
+  "main": "Gruntfile.js",
+  "scripts": {
+    "start": "grunt"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-cssmin": "~0.9.0",
+    "grunt-contrib-less": "~0.11.1",
+    "grunt-contrib-uglify": "~0.4.0",
+    "grunt-contrib-watch": "~0.6.1",
+    "load-grunt-tasks": "^3.5.2"
+  }
 }

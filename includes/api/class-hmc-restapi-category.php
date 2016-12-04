@@ -158,7 +158,7 @@ if ( ! class_exists( 'HMC_RestAPI_Category' ) ) {
 		 * @return WP_Error|WP_REST_Response
 		 */
 		public function get_items( $request ) {
-			$items = $this->category_handler->getVoices( null,'name', 'asc', $request->get_param( 'term' ) );
+			$items = $this->category_handler->getVoices( null,'type', 'asc', $request->get_param( 'term' ) );
 			$data  = array();
 			foreach ( $items as $item ) {
 				$itemdata = $this->prepare_item_for_response( $item, $request );

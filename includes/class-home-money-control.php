@@ -200,44 +200,62 @@ class Home_Money_Control {
 
 	public function enqueue_scripts(){
 
+		$ext='.js';
 
+		if ( ! WP_DEBUG ){
+			$ext='.min'.$ext;
+		}
 
-		wp_register_script( $this->plugin_slug . '-admin-base-script', plugins_url( 'assets/js/admin/base_admin.js', __HMC_FILE__ ), array(
-			'jquery',
-			'backbone',
-			'underscore'
-		), $this->version );
+		wp_register_script(
+			$this->plugin_slug . '-moment-script',
+			plugins_url( 'lib/moment/min/moment-with-locales.min.js', __HMC_FILE__ ),
+			array(),
+			$this->version
+		);
 
+		wp_register_script(
+			$this->plugin_slug . '-chartjs',
+			plugins_url( 'lib/chartjs/Chart.min.js', __HMC_FILE__ ),
+			array(
+				$this->plugin_slug . '-moment-script'
+			),
+			$this->version
+		);
 
-		wp_register_script( $this->plugin_slug . '-admin-views-counts-script', plugins_url( 'assets/js/admin/views/page_count_view.js', __HMC_FILE__ ), array(
-			$this->plugin_slug . '-admin-base-script',
-			$this->plugin_slug . '-admin-model-counts-script'
-		), $this->version );
-
-
-		wp_register_script( $this->plugin_slug . '-moment-script', plugins_url( 'lib/moment/min/moment-with-locales.min.js', __HMC_FILE__ ), array(), $this->version );
-
-		wp_register_script( $this->plugin_slug . '-chartjs', plugins_url( 'lib/chartjs/Chart.min.js', __HMC_FILE__ ), array($this->plugin_slug . '-moment-script'), $this->version );
-
-		wp_register_script( $this->plugin_slug . '-fullcalendar-script', plugins_url( 'lib/fullcalendar/dist/fullcalendar.min.js', __HMC_FILE__ ), array(
-			'jquery',
-			$this->plugin_slug . '-moment-script'
-		), $this->version );
-
-		wp_register_script( $this->plugin_slug . '-admin-model-counts-script', plugins_url( 'assets/js/admin/models/counts.js', __HMC_FILE__ ), array( $this->plugin_slug . '-admin-base-script' ), $this->version );
-		wp_register_script( $this->plugin_slug . '-admin-views-report-script', plugins_url( 'assets/js/admin/views/page_report_view.js', __HMC_FILE__ ), array(
+		wp_register_script(
 			$this->plugin_slug . '-fullcalendar-script',
-			$this->plugin_slug . '-admin-base-script',
-			$this->plugin_slug . '-admin-model-counts-script',
-			'jquery-ui-dialog',
-			'jquery-ui-autocomplete'
-		), $this->version );
+			plugins_url( 'lib/fullcalendar/dist/fullcalendar.min.js', __HMC_FILE__ ),
+			array(
+				'jquery',
+				$this->plugin_slug . '-moment-script'
+			),
+			$this->version
+		);
 
+		wp_register_script(
+			$this->plugin_slug . '-date-range-picker-script',
+			plugins_url( 'lib/daterangepicker/daterangepicker.js', __HMC_FILE__ ),
+			array(
+				'jquery',
+				$this->plugin_slug . '-moment-script'
+			),
+			$this->version
+		);
 
-		wp_register_script( $this->plugin_slug . '-date-range-picker-script', plugins_url( 'lib/daterangepicker/daterangepicker.js', __HMC_FILE__ ), array(
-			'jquery',
-			$this->plugin_slug . '-moment-script'
-		), $this->version );
+		wp_register_script(
+			$this->plugin_slug . '-admin-script',
+			plugins_url( 'assets/js/admin'.$ext, __HMC_FILE__ ),
+			array(
+				'jquery',
+				'backbone',
+				'underscore',
+				'jquery-ui-dialog',
+				'jquery-ui-autocomplete',
+				$this->plugin_slug . '-chartjs',
+				$this->plugin_slug . '-fullcalendar-script',
+			),
+			$this->version
+		);
 
 
 	}

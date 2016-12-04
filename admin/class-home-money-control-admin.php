@@ -81,7 +81,6 @@ class Home_Money_Control_Admin {
 	 * @return    null    Return early if no settings page is registered.
 	 */
 	public function enqueue_admin_scripts( $hook ) {
-		//$this->enqueue_scripts( $hook );
 		$this->apply_scripts( $hook );
 	}
 
@@ -123,37 +122,17 @@ class Home_Money_Control_Admin {
 			return;
 		}
 
-		$screen = get_current_screen();
-
 		if ( strpos( $hook, 'HMC' ) !== false ) {
+			wp_enqueue_script('jquery-ui-dialog');
+			wp_enqueue_script('jquery-ui-slider');
 			wp_enqueue_script( $this->plugin_slug . '-ajax-retry-script' );
-			wp_enqueue_script( $this->plugin_slug . '-admin-base-script' );
-		}
-
-		if ( strpos( $hook, 'HMC-id-menu-counts' ) !== false ) {
-			wp_enqueue_script( $this->plugin_slug . '-admin-model-counts-script' );
-			wp_enqueue_script( $this->plugin_slug . '-admin-views-counts-script' );
-		}
-
-		if ( strpos( $hook, 'HMC-id-menu-reports-list' ) !== false ) {
 			wp_enqueue_script( $this->plugin_slug . '-moment-script' );
 			wp_enqueue_script( $this->plugin_slug . '-fullcalendar-script' );
 			wp_enqueue_script( $this->plugin_slug . '-chartjs' );
-			wp_enqueue_script( $this->plugin_slug . '-admin-model-counts-script' );
-			wp_enqueue_script( $this->plugin_slug . '-admin-views-report-script' );
 			wp_enqueue_script( $this->plugin_slug . '-date-range-picker-script' );
 
-			wp_enqueue_script('jquery-ui-dialog');
-			wp_enqueue_script('jquery-ui-slider');
-
+			wp_enqueue_script( $this->plugin_slug . '-admin-script' );
 		}
-
-
-		if ( strpos( $hook, 'HMC-id-root-menu' ) !== false ) {
-			wp_enqueue_script( $this->plugin_slug . '-moment-script' );
-			wp_enqueue_script( $this->plugin_slug . '-chartjs' );
-		}
-
 	}
 
 
