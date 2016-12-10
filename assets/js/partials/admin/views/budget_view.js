@@ -110,7 +110,6 @@ HMC.Views.BudgetView = Backbone.View.extend({
         this._formatData("Budget"   ,"255, 99, 132",[datarow[0].budget, datarow[1].budget, datarow[2].budget, datarow[3].budget, datarow[5].budget  ])
       ]
     };
-    console.log(this.dataset);
   },
 
   _formatData: function($label, $color, $data){

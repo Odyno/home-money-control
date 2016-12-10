@@ -227,7 +227,7 @@ if ( ! class_exists( 'HMC_RestAPI_Transaction' ) ) {
 
 				if ( ! is_wp_error( $item ) ) {
 
-					$data     = $this->category_handler->update_trans( $item, false );
+					$data     = $this->transaction_handler->add( $item );
 					$response = new WP_REST_Response( $data );
 					$response->set_status( 200 );
 

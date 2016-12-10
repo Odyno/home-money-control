@@ -1,4 +1,4 @@
-/*! HMC - v0.0.1 - 2016-12-04 */
+/*! HMC - v0.0.1 - 2016-12-10 */
 jQuery(document).ready(function ($) {
 var previousHMC = window.HMC;
 
@@ -368,119 +368,120 @@ HMC.Views.ReportView = Backbone.View.extend({
 		"click #hmc-report-ok": "save",
 		"click #hmc-report-delete": "destroy",
 		"click .hmc-report-cancel": "close",
-		"input #hmc_count": "filterCount"
+		"input #hmc_count": "searchBestCount",
+		"change input[type=radio]": 'selectCount'
 	},
 
 	initialize: function() {
-		_.bindAll(this, "render", "_sync_ui", "_sync_model", "open", "close", "save", "destroy");
+		_.bindAll(this, "render", "_sync_ui", "_sync_model", "close", "save", "destroy");
 		this.value = null;
 		this.description = null;
 		this.category = null;
+
+		this._processing(false,"search");
+		this._processing(false,"save");
+		this._processing(false,"delete");
 	},
 
-	filterCount: function(){
-
-		console.log("pippo");
+	/**
+	 * Seaqrch che best count in according of name
+	 */
+	searchBestCount: function(){
+		var me= this;
 		if ( this.filter != $("#hmc_count").val() ){
+
 			this.filter=$("#hmc_count").val();
-			if (this.currentRequest != null){
-				this.currentRequest.abort();
+
+			if (me.currentRequest != null){
+				me.currentRequest.abort();
 			}
+
 			this.currentRequest=$.ajax({
 				url: "/wp-json/hmc/v1/voices",
 				method: "GET",
 				data: "term="+encodeURIComponent(this.filter),
 				dataType: "json",
 				beforeSend: function() {
-					$("#acc_0").hide();
-					$("#accordion_0" ).html("");
-					$("#acc_1").hide();
-					$("#accordion_1" ).html("");
-					$("#acc_2").hide();
-					$("#accordion_2" ).html("");
-					$("#acc_3").hide();
-					$("#accordion_3" ).html("");
-					$("#acc_4").hide();
-					$("#accordion_4" ).html("");
-					$("#acc_5").hide();
-					$("#accordion_5" ).html("");
+
+				 me.hideCountList();
+				 me._processing(true,"search");
 				}
 			}).done(function(data){
 				data.forEach(function(item){
 					$("#acc_"+ item.type ).show();
 					$("#acc_label_"+ item.type ).html(HMC.COUNT_TYPE.getLabel(item.type));
-					$("#accordion_"+ item.type ).append("<input type='radio' name='selected_count_id' value='"+ item.id +"' ><span class='count_type type_"+ item.type+"' ></span> "+ item.name + " " + ( item.description !== null ? item.description : "")+"</input><br><br>");
+					$("#accordion_"+ item.type ).append(
+						"<label>"+
+						"  <input type='radio' name='selected_count_id' value='' data-id='"+ item.id +"' data-name='"+ item.name +"' data-description='"+ item.description +"' />" +
+						"  <span>"+  ( item.description !== null ?   ( item.name +  " - " + item.description ) : item.name   )  + "</span>"+
+						"</label><br>"
+					);
 				});
+				me._processing(false,"search");
 			});
 		}
 
 
 	},
 
-	selectCount: function(item){
-		$("#hmc_count").val(item.name);
-		$("#hmc_count_id").val(item.id);
-		$("#hmc_count_description").html(item.description);
+	hideCountList: function(){
+		$("#acc_0").hide();
+		$("#accordion_0" ).html("");
+		$("#acc_1").hide();
+		$("#accordion_1" ).html("");
+		$("#acc_2").hide();
+		$("#accordion_2" ).html("");
+		$("#acc_3").hide();
+		$("#accordion_3" ).html("");
+		$("#acc_4").hide();
+		$("#accordion_4" ).html("");
+		$("#acc_5").hide();
+		$("#accordion_5" ).html("");
 	},
 
-	render: function() {
+	selectCount: function(item){
+		var obj=$(item.target);
+		$("#hmc_count").val(obj.data('name'));
+		$("#hmc_count_id").val(obj.data('id'));
+		$("#hmc_count_description").html(obj.data('description'));
+	},
 
-		this.open();
-
-		this.$el.show();
-
-		$("#acc_0").hide();
-		$("#acc_1").hide();
-		$("#acc_2").hide();
-		$("#acc_3").hide();
-		$("#acc_4").hide();
-		$("#acc_5").hide();
-
+	configureButtons: function(){
+		"use strict";
 		$("#hmc-report-ok").show();
-
 		if (!this.model.isNew()) {
 			$("#hmc-report-delete").show();
 		}else{
 			$("#hmc-report-delete").hide();
 		}
 		$(".hmc-report-cancel").show();
+	},
 
+	configureTitle: function(){
+		"use strict";
 		$(".hmc-modal-title").text((this.model.isNew() ? "New" : "Edit") + " Report");
+	},
 
-
-
-
-
-      /*
-      $("#hmc_count").autocomplete({
-        source: "/wp-json/hmc/v1/voices",
-        select: function(event, ui) {
-          $("#hmc_count").val(ui.item.name);
-          $("#hmc_count_id").val(ui.item.id);
-          $("#hmc_count_description").html(ui.item.description);
-          return false;
-        }
-      })
-        .autocomplete("instance")._renderItem = function(ul, item) {
-        return $("<li>")
-          .append('<span class="count_type type_' + item.type + '"></span> ' + item.name + ' ' + ( item.description !== null ? item.description : ''))
-          .appendTo(ul);
-      };
-      */
-
+	render: function() {
+		this._sync_ui();
+		this.hideCountList();
+		this.configureButtons();
+		this.configureTitle();
+		$("#hmc_value_date").datepicker();
+		this.$el.show();
 		return this;
 	},
 
-	_processing: function(isInProgress) {
+	_processing: function(isInProgress,type) {
 		if (isInProgress) {
-			this.$("#hmc-processing").show();
+			this.$("#hmc-"+type+"-processing").show();
 		} else {
-			this.$("#hmc-processing").hide();
+			this.$("#hmc-"+type+"-processing").hide();
 		}
 	},
 
 	_sync_ui: function() {
-		this._processing(true);
+		this._processing(true,"save");
 
 		this.$("#hmc_value_date").val(this.model.get("value_date"));
 
@@ -496,14 +497,13 @@ HMC.Views.ReportView = Backbone.View.extend({
 			this.$("#hmc_count_id").val("0");
 			this.$("#hmc_count").val("");
 		}
-		this._processing(false);
+		this._processing(false,"save");
 	},
 
 	_sync_model: function() {
-
 		var category = {};
-		category["id"] = this.$("#hmc_count_id").val();
 
+		category["id"] = this.$("#hmc_count_id").val();
 		var report = {};
 		report["value_date"] = this.$("#hmc_value_date").val();
 		report["posting_date"] = moment().toISOString();
@@ -514,44 +514,49 @@ HMC.Views.ReportView = Backbone.View.extend({
 		this.model.set(report);
 	},
 
-	open: function() {
-		this._sync_ui();
-	},
 
 	close: function() {
-		this._processing(false);
+		this._processing(false,"delete");
+		this._processing(false,"search");
+		this._processing(false,"save");
 		this.$el.hide();
 	},
 
 	save: function() {
+		var me= this;
 		this._sync_model();
-		this._processing(true);
+		this._processing(true,"save");
+		if (! this.model.isValid()){
+			this._processing(false,"save");
+			alert('Please fill all the attribute');
+		}
 		if (this.model.isNew()) {
-			this.collection.create(this.model, {success: this.close});
+			this.collection.create(this.model, {success: me.close});
 		} else {
-			this.model.save({}, {success: this.close});
+			this.model.save(null, {
+				success: me.close
+			});
 		}
 
 	},
 
 	destroy: function() {
+
+		this._processing(true,"delete");
 		if (confirm("Are you sure you want to DELETE this Count from database?")) {
 			this.model.destroy({success: this.close});
 		}
 	},
 
+	onNew: function(startDate, collection) {
+		this.collection = collection;
+		this.onEdit(new HMC.Models.Report({"value_date": startDate}));
+	},
+
 	onEdit: function(model) {
 		this.model = model;
 		this.render();
-	},
-
-	onNew: function(startDate, collection) {
-		this.collection = collection;
-		this.model = new HMC.Models.Report({"value_date": startDate});
-		this._sync_ui();
-		this.render();
 	}
-
 });
 
 /**
@@ -577,7 +582,11 @@ HMC.Views.Calendar = Backbone.View.extend({
     this.listenTo(this.collection, 'add', this._addOne);
     this.listenTo(this.collection, 'change', this._change);
     this.listenTo(this.collection, 'destroy', this._destroy);
-    this.reportView = new HMC.Views.ReportView();
+  },
+
+  setReportHandler: function(obj){
+    "use strict";
+    this.reportView = obj;
   },
 
   render: function() {
@@ -863,7 +872,7 @@ HMC.Views.ReportTable = Backbone.View.extend({
   initialize: function(options) {
     this._elementID = options.id;
     this.collection = new HMC.Models.Reports();
-    this.editor = new HMC.Views.ReportView();
+    this.editor = null;
     this.categories = options.category;
     // Ensure our methods keep the `this` reference to the view itself
     _.bindAll(this, 'render');
@@ -1044,7 +1053,6 @@ HMC.Views.BudgetView = Backbone.View.extend({
         this._formatData("Budget"   ,"255, 99, 132",[datarow[0].budget, datarow[1].budget, datarow[2].budget, datarow[3].budget, datarow[5].budget  ])
       ]
     };
-    console.log(this.dataset);
   },
 
   _formatData: function($label, $color, $data){

@@ -38,7 +38,7 @@ HMC.Views.ReportTable = Backbone.View.extend({
   initialize: function(options) {
     this._elementID = options.id;
     this.collection = new HMC.Models.Reports();
-    this.editor = new HMC.Views.ReportView();
+    this.editor = null;
     this.categories = options.category;
     // Ensure our methods keep the `this` reference to the view itself
     _.bindAll(this, 'render');

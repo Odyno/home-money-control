@@ -92,25 +92,18 @@ class Home_Money_Control_Admin {
 		}
 
 		$screen = get_current_screen();
-		if ( $this->plugin_screen_hook_suffix === $screen->id ) {
-			wp_enqueue_style( $this->plugin_slug . '-admin-styles');
-		}
+
 
 		if ( strpos( $hook, 'HMC' ) !== false ) {
-			wp_enqueue_style( $this->plugin_slug . '-admin-styles');
-		}
 
-		if ( strpos( $hook, 'HMC-id-menu-reports-list' ) !== false ) {
-			wp_enqueue_style( 'wp-jquery-ui-dialog' );
-
-			  wp_enqueue_style('plugin_name-admin-ui-css',
-				'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/themes/base/jquery.ui.all.css',
-				false,
-				$this->version,
-				false);
+			if ( 'classic' == get_user_option( 'admin_color') )
+				wp_enqueue_style ( 'jquery-ui-css', plugin_dir_url( __FILE__ ) . '../assets/css/jquery-ui-classic.css' );
+			else
+				wp_enqueue_style ( 'jquery-ui-css', plugin_dir_url( __FILE__ ) . '../assets/css/jquery-ui-fresh.css' );
 
 			wp_enqueue_style( $this->plugin_slug . '-fullcalendar-style');
-			wp_enqueue_style( $this->plugin_slug . '-date-range-picker-style');
+			wp_enqueue_style( $this->plugin_slug . '-admin-styles');
+
 		}
 
 	}
@@ -123,8 +116,10 @@ class Home_Money_Control_Admin {
 		}
 
 		if ( strpos( $hook, 'HMC' ) !== false ) {
+			wp_enqueue_script('jquery-ui-core' );
 			wp_enqueue_script('jquery-ui-dialog');
 			wp_enqueue_script('jquery-ui-slider');
+			wp_enqueue_script('jquery-ui-datepicker' );
 			wp_enqueue_script( $this->plugin_slug . '-ajax-retry-script' );
 			wp_enqueue_script( $this->plugin_slug . '-moment-script' );
 			wp_enqueue_script( $this->plugin_slug . '-fullcalendar-script' );

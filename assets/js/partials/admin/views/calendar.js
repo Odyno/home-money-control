@@ -38,7 +38,11 @@ HMC.Views.Calendar = Backbone.View.extend({
     this.listenTo(this.collection, 'add', this._addOne);
     this.listenTo(this.collection, 'change', this._change);
     this.listenTo(this.collection, 'destroy', this._destroy);
-    this.reportView = new HMC.Views.ReportView();
+  },
+
+  setReportHandler: function(obj){
+    "use strict";
+    this.reportView = obj;
   },
 
   render: function() {
