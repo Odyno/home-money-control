@@ -33,10 +33,16 @@ HMC.Views.ReportView = Backbone.View.extend({
 		this.value = null;
 		this.description = null;
 		this.category = null;
+		this.domain=null;
 
 		this._processing(false,"search");
 		this._processing(false,"save");
 		this._processing(false,"delete");
+	},
+
+	setDomainSearch: function (types){
+		"use strict";
+		this.domain=types;
 	},
 
 	/**
@@ -44,9 +50,20 @@ HMC.Views.ReportView = Backbone.View.extend({
 	 */
 	searchBestCount: function(){
 		var me= this;
-		if ( this.filter != $("#hmc_count").val() ){
+		var filter=null;
+		var data=[];
+		if ( filter != $("#hmc_count").val() ){
 
-			this.filter=$("#hmc_count").val();
+			filter=$("#hmc_count").val();
+
+
+			if (this.domain !=null){
+         data.push("type="+encodeURIComponent(this.domain));
+			}
+
+      if (filter != null){
+				data.push("term="+encodeURIComponent(filter));
+			}
 
 			if (me.currentRequest != null){
 				me.currentRequest.abort();
@@ -55,7 +72,7 @@ HMC.Views.ReportView = Backbone.View.extend({
 			this.currentRequest=$.ajax({
 				url: "/wp-json/hmc/v1/voices",
 				method: "GET",
-				data: "term="+encodeURIComponent(this.filter),
+				data: data.join('&'),
 				dataType: "json",
 				beforeSend: function() {
 

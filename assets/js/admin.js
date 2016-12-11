@@ -1,4 +1,4 @@
-/*! HMC - v0.0.1 - 2016-12-10 */
+/*! HMC - v0.0.1 - 2016-12-11 */
 jQuery(document).ready(function ($) {
 var previousHMC = window.HMC;
 
@@ -377,10 +377,16 @@ HMC.Views.ReportView = Backbone.View.extend({
 		this.value = null;
 		this.description = null;
 		this.category = null;
+		this.domain=null;
 
 		this._processing(false,"search");
 		this._processing(false,"save");
 		this._processing(false,"delete");
+	},
+
+	setDomainSearch: function (types){
+		"use strict";
+		this.domain=types;
 	},
 
 	/**
@@ -388,9 +394,20 @@ HMC.Views.ReportView = Backbone.View.extend({
 	 */
 	searchBestCount: function(){
 		var me= this;
-		if ( this.filter != $("#hmc_count").val() ){
+		var filter=null;
+		var data=[];
+		if ( filter != $("#hmc_count").val() ){
 
-			this.filter=$("#hmc_count").val();
+			filter=$("#hmc_count").val();
+
+
+			if (this.domain !=null){
+         data.push("type="+encodeURIComponent(this.domain));
+			}
+
+      if (filter != null){
+				data.push("term="+encodeURIComponent(filter));
+			}
 
 			if (me.currentRequest != null){
 				me.currentRequest.abort();
@@ -399,7 +416,7 @@ HMC.Views.ReportView = Backbone.View.extend({
 			this.currentRequest=$.ajax({
 				url: "/wp-json/hmc/v1/voices",
 				method: "GET",
-				data: "term="+encodeURIComponent(this.filter),
+				data: data.join('&'),
 				dataType: "json",
 				beforeSend: function() {
 
@@ -621,6 +638,7 @@ HMC.Views.Calendar = Backbone.View.extend({
   },
 
   eventClick: function(fcEvent) {
+    this.reportView.setDomainSearch(null);
     this.reportView.onEdit(this.collection.get(fcEvent.id));
   },
 
@@ -634,6 +652,7 @@ HMC.Views.Calendar = Backbone.View.extend({
   },
 
   select: function(startDate, endDate, allday) {
+    this.reportView.setDomainSearch(null);
     this.reportView.onNew(startDate, this.collection);
   },
 
@@ -923,6 +942,7 @@ HMC.Views.ReportTable = Backbone.View.extend({
 
 
   onNew: function() {
+    this.editor.setDomainSearch(this.categories);
     this.editor.onNew(moment(), this.collection);
   },
 

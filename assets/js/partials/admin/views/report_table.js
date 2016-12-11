@@ -89,6 +89,7 @@ HMC.Views.ReportTable = Backbone.View.extend({
 
 
   onNew: function() {
+    this.editor.setDomainSearch(this.categories);
     this.editor.onNew(moment(), this.collection);
   },
 

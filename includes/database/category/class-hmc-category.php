@@ -114,7 +114,7 @@ if ( ! class_exists( 'HMC_Category' ) ) {
 		 *
 		 * @return array<voice>
 		 */
-		public function getVoices( $id = null, $order_by = self::NAME, $order = "asc", $term = null ) {
+		public function getVoices( $id = null, $order_by = self::NAME, $order = "asc", $term = null , $type=null ) {
 			global $wpdb;
 			$table_name = $wpdb->prefix . self::TABLE_NAME;
 			if ( isset( $id ) && $id != null ) {
@@ -125,6 +125,10 @@ if ( ! class_exists( 'HMC_Category' ) ) {
 
 			if ( isset( $term ) && $term != null ) {
 				$where .= "  and UPPER(" . self::NAME . ") LIKE UPPER('%$term%') OR UPPER(" . self::DESCRIPTION . ") LIKE UPPER('%$term%') ";
+			}
+
+			if ( isset( $type ) && $type != null ) {
+				$where .= "  and  ". self::TYPE . " in ( " . $type . " )";
 			}
 
 

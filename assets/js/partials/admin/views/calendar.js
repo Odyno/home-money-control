@@ -77,6 +77,7 @@ HMC.Views.Calendar = Backbone.View.extend({
   },
 
   eventClick: function(fcEvent) {
+    this.reportView.setDomainSearch(null);
     this.reportView.onEdit(this.collection.get(fcEvent.id));
   },
 
@@ -90,6 +91,7 @@ HMC.Views.Calendar = Backbone.View.extend({
   },
 
   select: function(startDate, endDate, allday) {
+    this.reportView.setDomainSearch(null);
     this.reportView.onNew(startDate, this.collection);
   },
 
