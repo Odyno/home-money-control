@@ -124,11 +124,11 @@ if ( ! class_exists( 'HMC_Category' ) ) {
 			}
 
 			if ( isset( $term ) && $term != null ) {
-				$where .= "  and UPPER(" . self::NAME . ") LIKE UPPER('%$term%') OR UPPER(" . self::DESCRIPTION . ") LIKE UPPER('%$term%') ";
+				$where .= "  and  ( UPPER(" . self::NAME . ") LIKE UPPER('%$term%') OR UPPER(" . self::DESCRIPTION . ") LIKE UPPER('%$term%') ) ";
 			}
 
 			if ( isset( $type ) && $type != null ) {
-				$where .= "  and  ". self::TYPE . " in ( " . $type . " )";
+				$where .= "  and  ". self::TYPE . " in ( " . $type . " ) ";
 			}
 
 
